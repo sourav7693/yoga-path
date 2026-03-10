@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import FormModal from "@/components/global/FormModal";
+import { CourseDoc } from "@/models/Course";
 
-export default function PricingSection() {
+export default function PricingSection({courses} : {courses : CourseDoc[]}) {
   const [timeLeft, setTimeLeft] = useState(15 * 60); 
   const [openForm, setOpenForm] = useState(false);
 
@@ -95,7 +96,7 @@ export default function PricingSection() {
         </div>
       </section>
 
-      {openForm && <FormModal onClose={() => setOpenForm(false)} />}
+      {openForm && <FormModal onClose={() => setOpenForm(false)} courses={courses}/>}
     </>
   );
 }

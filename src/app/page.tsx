@@ -11,15 +11,14 @@ import YogaCourses from "@/components/home/YogaCourses";
 export default async function Home() {
   const courses = (await getAllCourses(1,6)).data;
   return (
-       <MainTemplates>
-        <HomeBanner/>
-        <AboutSection/>
-        <OurSucessStory/>
-        <YogaCourses courses={courses}/>
-        <WhyChoose/>
-        <PrisingSection/>
-        <Testimonial/>
-       </MainTemplates>
-    
+    <MainTemplates>
+      <HomeBanner />
+      <AboutSection />
+      <OurSucessStory />
+      <YogaCourses courses={courses} />
+      <WhyChoose />
+      <PrisingSection courses={courses}/>
+      <Testimonial />
+    </MainTemplates>
   );
 }

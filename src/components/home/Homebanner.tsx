@@ -71,7 +71,7 @@ export default function HomeBanner() {
         <InfoCard />
       </div>
 
-       {openForm && <FormModal onClose={() => setOpenForm(false)} />}
+       {openForm && <FormModal onClose={() => setOpenForm(false)} courses={[]}/>}
     </section>
     
   );
