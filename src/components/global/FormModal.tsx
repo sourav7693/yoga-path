@@ -42,6 +42,9 @@ interface RazorpayOptions {
   };
   notes?: Record<string, string>;
   theme?: { color?: string };
+  modal?: {
+    ondismiss?: () => void;
+  };
 }
 
 interface RazorpayResponse {
@@ -62,7 +65,13 @@ async function loadRazorpayScript(): Promise<void> {
   });
 }
 
-export default function FormModal({ onClose, courses }: { onClose: () => void, courses : CourseDoc[]}) {
+export default function FormModal({
+  onClose,
+  courses,
+}: {
+  onClose: () => void;
+  courses: CourseDoc[];
+}) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [otpMode, setOtpMode] = useState(false);
   const [otp, setOtp] = useState("");
@@ -77,9 +86,9 @@ export default function FormModal({ onClose, courses }: { onClose: () => void, c
     enrollCourse,
     null,
   );
- const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(
-   null,
- );
+  const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(
+    null,
+  );
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -153,97 +162,100 @@ export default function FormModal({ onClose, courses }: { onClose: () => void, c
     toast.success(enrollState.message);
   }, [enrollState]);
 
-const handlePayment = async () => {
-  if (!selectedCourse) {
-    toast.error("No course selected");
-    return;
-  }
-  try {
-    await loadRazorpayScript();
-const course = courses.find((c) => c.courseId === selectedCourse?.courseId);
-    const orderFd = new FormData();
-    orderFd.append("amount", String(course?.offerPrice || course?.courseMRP));
-
-    const res = await createPaymentOrder(null, orderFd);
-
-    if (!res.success) {
-      toast.error(res.message || "Failed to create order");
+  const handlePayment = async () => {
+    if (!selectedCourse) {
+      toast.error("No course selected");
       return;
     }
+    try {
+      await loadRazorpayScript();
+      const course = courses.find(
+        (c) => c.courseId === selectedCourse?.courseId,
+      );
+      const orderFd = new FormData();
+      orderFd.append("amount", String(course?.offerPrice || course?.courseMRP));
 
-    const { order, key } = res;
+      const res = await createPaymentOrder(null, orderFd);
 
-    const options: RazorpayOptions = {
-      key,
-      amount: Number(order?.amount),
-      currency: "INR",
-      name: "Yoga Path",
-      description: "Course Enrollment",
-      order_id: order.id,
+      if (!res.success) {
+        toast.error(res.message || "Failed to create order");
+        return;
+      }
 
-      handler: async (response) => {
-        // --- Step 1: Verify Razorpay signature ---
-        const verifyFd = new FormData();
-        verifyFd.append("razorpay_order_id", response.razorpay_order_id);
-        verifyFd.append("razorpay_payment_id", response.razorpay_payment_id);
-        verifyFd.append("razorpay_signature", response.razorpay_signature);
+      const { order, key } = res;
 
-        const verify = await verifyRazorpaySignature(null, verifyFd);
+      const options: RazorpayOptions = {
+        key: key ? key : "",
+        amount: Number(order?.amount),
+        currency: "INR",
+        name: "Yoga Path",
+        description: "Course Enrollment",
+        order_id: order ? order.id : "",
 
-        if (!verify.success) {
-          toast.error("Payment verification failed");
-          return;
-        }
+        handler: async (response) => {
+          // --- Step 1: Verify Razorpay signature ---
+          const verifyFd = new FormData();
+          verifyFd.append("razorpay_order_id", response.razorpay_order_id);
+          verifyFd.append("razorpay_payment_id", response.razorpay_payment_id);
+          verifyFd.append("razorpay_signature", response.razorpay_signature);
 
-        // --- Step 2: Complete enrollment ---
-        const enrollFd = new FormData();
-        enrollFd.append("mobile", formData.mobile);
-        enrollFd.append("courseId", selectedCourse!.courseId);
-        enrollFd.append("location", selectedCourse?.location || "");
-        enrollFd.append("remark", selectedCourse?.remark || "");
+          const verify = await verifyRazorpaySignature(null, verifyFd);
 
-        enrollFd.append("razorpay_order_id", response.razorpay_order_id);
-        enrollFd.append("razorpay_payment_id", response.razorpay_payment_id);
-        enrollFd.append("razorpay_signature", response.razorpay_signature);
-        enrollFd.append(
-          "amount",
-          String(course?.offerPrice || course?.courseMRP),
-        );
+          if (!verify.success) {
+            toast.error("Payment verification failed");
+            return;
+          }
 
-        const enroll = await completeEnrollment(null, enrollFd);
+          // --- Step 2: Complete enrollment ---
+          const enrollFd = new FormData();
+          enrollFd.append("mobile", formData.mobile);
+          enrollFd.append("courseId", selectedCourse!.courseId);
+          enrollFd.append("location", selectedCourse?.location || "");
+          enrollFd.append("remark", selectedCourse?.remark || "");
 
-        if (enroll.success) {
-          toast.success(enroll.message || "Enrollment successful");
-          setStep(1);
-          onClose();
-        } else {
-          toast.error(enroll.message || "Enrollment failed");
-        }
-      },
+          enrollFd.append("razorpay_order_id", response.razorpay_order_id);
+          enrollFd.append("razorpay_payment_id", response.razorpay_payment_id);
+          enrollFd.append("razorpay_signature", response.razorpay_signature);
+          enrollFd.append(
+            "amount",
+            String(course?.offerPrice || course?.courseMRP),
+          );
 
-      modal: {
-        ondismiss: () => {
-          toast.info("Payment cancelled");
-          onClose();
+          const enroll = await completeEnrollment(null, enrollFd);
+
+          if (enroll.success) {
+            toast.success(enroll.message || "Enrollment successful");
+            setStep(1);
+            onClose();
+          } else {
+            toast.error(enroll.message || "Enrollment failed");
+          }
         },
-      },
-      prefill: {
-        name: formData.name,
-        contact: formData.mobile,
-      },
 
-      theme: { color: "#b91c1c" },
-    };
+        //ts-ignore
+        modal: {
+          ondismiss: () => {
+            toast.info("Payment cancelled");
+            onClose();
+          },
+        },
+        prefill: {
+          name: formData.name,
+          contact: formData.mobile,
+        },
 
-    const razorpay = new (window as unknown as RazorpayWindow).Razorpay(
-      options,
-    );
-    razorpay.open();
-  } catch (err) {
-    console.error(err);
-    toast.error("Payment failed");
-  }
-};
+        theme: { color: "#b91c1c" },
+      };
+
+      const razorpay = new (window as unknown as RazorpayWindow).Razorpay(
+        options,
+      );
+      razorpay.open();
+    } catch (err) {
+      console.error(err);
+      toast.error("Payment failed");
+    }
+  };
 
   const inputClass =
     "w-full px-4 py-3 text-sm " +
