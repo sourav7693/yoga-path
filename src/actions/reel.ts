@@ -2,9 +2,7 @@
 
 import { connectDb } from "@/lib/connection";
 import Reel from "@/models/Reel";
-import { uploadFile, deleteFile } from "@/lib/cloudinaryService";
-import { writeFile } from "fs/promises";
-import path from "path";
+import cloudinary, { deleteFile, UploadFileResult } from "@/lib/cloudinaryService";
 import { generateCustomId } from "@/helper/generateCustomId";
 import { revalidatePath } from "next/cache";
 
@@ -22,15 +20,19 @@ export async function createReel(prev: unknown, formData: FormData) {
     const bytes = await video.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const tempPath = path.join(process.cwd(), "public/temp", video.name);
+    const uploadResult: UploadFileResult = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: "video", folder: "reels" },
+        (error, result) => {
+          if (error) reject(error);
+          else if (result) resolve(result);
+          else reject(new Error("Upload failed: no result returned"));
+        },
+      );
 
-    await writeFile(tempPath, buffer);
+      stream.end(buffer);
+    });
 
-    const uploadResult = await uploadFile(tempPath);
-
-    if (uploadResult instanceof Error) {
-      return { success: false, message: "Upload failed" };
-    }
 
     await Reel.create({
         reelId : await generateCustomId(Reel, "reelId", "RL-"),
