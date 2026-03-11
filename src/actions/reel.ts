@@ -22,7 +22,7 @@ export async function createReel(prev: unknown, formData: FormData) {
 
     const uploadResult: UploadFileResult = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { resource_type: "video", folder: "reels" },
+        { resource_type: "video", folder: "yogapath/images" },
         (error, result) => {
           if (error) reject(error);
           else if (result) resolve(result);
