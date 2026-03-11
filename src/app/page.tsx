@@ -7,14 +7,17 @@ import PrisingSection from "@/components/home/PricisingSection"
 import Testimonial from "@/components/home/Testimonial"
 import { getAllCourses } from "@/actions/course";
 import YogaCourses from "@/components/home/YogaCourses";
+import { getReels } from "@/actions/reel";
 
 export default async function Home() {
-  const courses = (await getAllCourses(1,6)).data;
+  const [courseResult, reelsResult] = await Promise.all([getAllCourses(1,6), getReels(1,0)]);  
+  const courses = courseResult.data;
+  const reels = reelsResult.data;
   return (
     <MainTemplates>
       <HomeBanner />
       <AboutSection />
-      <OurSucessStory />
+      <OurSucessStory reels={reels}/>
       <YogaCourses courses={courses} />
       <WhyChoose />
       <PrisingSection courses={courses}/>
