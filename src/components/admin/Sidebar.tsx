@@ -31,17 +31,17 @@ export default function Sidebar() {
     {
       icon: <FaImages size={20} />,
       label: "Media Library",
-      href: "/admin/gallery",
+      href: "/admin/reel",
     },
     {
       icon: <BsFillBarChartLineFill size={20} />,
       label: "Analytics",
-      href: "/admin/analytics",
+      href: "/admin/dashboard",
     },
     {
       icon: <IoIosSettings size={20} />,
       label: "Settings",
-      href: "/admin/settings",
+      href: "/admin/dashboard",
     },
     {
       icon: <MdOutlineLogout size={20} />,
@@ -54,7 +54,7 @@ export default function Sidebar() {
     <aside
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
-      className={`h-screen bg-white border-r border-gray-200 shadow-md
+      className={`h-screen sticky top-0 bg-white border-r border-gray-200 shadow-md
         transition-all duration-300 ease-in-out
         ${isExpanded ? "w-64" : "w-20"}
       `}

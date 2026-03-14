@@ -5,6 +5,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 export default function Pagination({
   pagination,
+  mode,
 }: {
   pagination: {
     totalCount: number;
@@ -12,6 +13,7 @@ export default function Pagination({
     limit: number;
     totalPages: number;
   };
+  mode?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,16 +79,18 @@ export default function Pagination({
           </div>
 
           {/* Category filter */}
-          <select
-            defaultValue={searchParams.get("category") || "all"}
-            onChange={(e) => changeCategory(e.target.value)}
-            className="border border-gray-200 rounded-lg px-2 py-1"
-          >
-            <option value="all">All Categories</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
+          {mode && (
+            <select
+              defaultValue={searchParams.get("category") || "all"}
+              onChange={(e) => changeCategory(e.target.value)}
+              className="border border-gray-200 rounded-lg px-2 py-1"
+            >
+              <option value="all">All Categories</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          )}
 
           {/* Search */}
           <input

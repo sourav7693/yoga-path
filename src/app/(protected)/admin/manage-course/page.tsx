@@ -76,7 +76,7 @@ const page = async ({
       </div>
 
       <CourseTable courses={courses} />
-      <Pagination pagination={pagination} />
+      <Pagination pagination={pagination} mode={true} />
     </section>
   );
 };

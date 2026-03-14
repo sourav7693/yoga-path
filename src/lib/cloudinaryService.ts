@@ -17,26 +17,23 @@ export interface UploadFileResult {
 }
  
 export const uploadFile = async (
-  tempFilePath: string,  
+  tempFilePath: string,
 ): Promise<UploadFileResult | Error> => {
   try {
-    const format = "jpg";
-    const resourceType: "image" | "video" | "raw" | "auto" = "image";
-
     const result: UploadFileResult = await cloudinary.uploader.upload(
       tempFilePath,
       {
-        folder: `yogapath/images`,
-        resource_type: resourceType,
-        format: format,
-      }
+        folder: "yogapath/images",
+        resource_type: "auto",
+      },
     );
 
     await fs.unlink(tempFilePath);
+
     return result;
   } catch (error) {
-    console.error("Error uploading file:", error);
-    return new Error("File upload failed");
+    console.error("Upload error:", error);
+    return new Error("Upload failed");
   }
 };
 
