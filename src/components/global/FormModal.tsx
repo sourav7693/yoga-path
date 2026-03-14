@@ -75,7 +75,7 @@ export default function FormModal({
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [otpMode, setOtpMode] = useState(false);
   const [otp, setOtp] = useState("");
-  const [formData, setFormData] = useState({ name: "", mobile: "" });
+  const [formData, setFormData] = useState({ name: "", mobile: "", email: "" });
   const [otpState, otpAction, otpPending] = useActionState(sendLeadOtp, null);
   const [verifyState, verifyAction, verifyPending] = useActionState(
     verifyLeadOtp,
@@ -83,7 +83,40 @@ export default function FormModal({
   );
   const [enrolledCourses, setEnrolledCourses] = useState<string[]>([]);
   const [enrollState, enrollAction, enrollPending] = useActionState(
-    enrollCourse,
+    async (prev: any, formData: FormData) => {
+      try {
+        const courseId = formData.get("courseId") as string;
+        const location = formData.get("location") as string;
+        const remark = formData.get("remark") as string;
+        const email = formData.get("email") as string;
+
+        const res = await enrollCourse(prev, formData);
+
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        setSelectedCourse({
+          courseId,
+          location,
+          remark,
+        } as any);
+
+        setFormData((prev) => ({
+          ...prev,
+          email,
+        }));
+
+        setStep(3);
+        toast.success(res.message);
+        return;
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to enroll");
+        return;
+      }
+    },
     null,
   );
   const [selectedCourse, setSelectedCourse] = useState<SelectedCourse | null>(
@@ -150,17 +183,6 @@ export default function FormModal({
 
     loadEnrollments();
   }, [step]);
-
-  useEffect(() => {
-    if (!enrollState) return;
-
-    if (!enrollState.success) {
-      toast.error(enrollState.message);
-      return;
-    }
-
-    toast.success(enrollState.message);
-  }, [enrollState]);
 
   const handlePayment = async () => {
     if (!selectedCourse) {
@@ -365,26 +387,7 @@ export default function FormModal({
         )}
 
         {step === 2 && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              const fd = new FormData(e.currentTarget);
-
-              const courseId = fd.get("courseId") as string;
-              const location = fd.get("location") as string;
-              const remark = fd.get("remark") as string;
-
-              setSelectedCourse({
-                courseId,
-                location,
-                remark,
-              } as any);
-
-              setStep(3);
-            }}
-            className="space-y-3"
-          >
+          <form action={enrollAction} className="space-y-3">
             <input type="hidden" name="mobile" value={formData.mobile} />
             <div className="rounded-[10px] overflow-hidden">
               <select
@@ -415,6 +418,12 @@ export default function FormModal({
                 type="text"
                 name="location"
                 placeholder="Location"
+                className={inputClass}
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
                 className={inputClass}
               />
 

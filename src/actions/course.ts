@@ -7,6 +7,9 @@ import { connectDb } from "@/lib/connection";
 import { Course } from "@/models/Course";
 import { generateSlug } from "@/helper/generateSlug";
 import { revalidatePath } from "next/cache";
+import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import fs from "fs/promises";
+import fsSync from "fs";
 
 export async function createCourse(prevState: unknown, formData: FormData) {
   await connectDb();
@@ -18,7 +21,10 @@ export async function createCourse(prevState: unknown, formData: FormData) {
   const days = formData.get("days") as string;
 
   const startDate = formData.get("startDate") as string;
+  const startTime = formData.get("startTime") as string;
   const endDate = formData.get("endDate") as string;
+
+  const combinedStartDate = new Date(`${startDate}T${startTime}:00`);
 
   const meetingDuration = formData.get("meetingDuration") as string;
 
@@ -27,7 +33,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
 
   const thumbnail = formData.get("thumbnail") as File;
 
-  const slug = generateSlug(courseName);  
+  const slug = generateSlug(courseName);
   const offerPrice = Number(formData.get("offerPrice"));
 
   if (
@@ -36,6 +42,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     !category ||
     !days ||
     !startDate ||
+    !startTime ||
     !endDate ||
     !meetingDuration ||
     !courseMRP ||
@@ -52,7 +59,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     };
   }
 
-  if(startDate > endDate) {
+  if (startDate > endDate) {
     return {
       success: false,
       message: "Start date must be less than end date",
@@ -69,6 +76,53 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     return { success: false, message: "Image upload failed" };
   }
 
+  await fs.unlink(tempFilePath);
+
+  if (!fsSync.existsSync(TOKEN_PATH)) {
+    return {
+      success: false,
+      message: "Please connect your Google Calendar account first",
+      authRequired: true,
+    };
+  }
+
+  const auth = getAuthClient();
+  if (!auth) {
+    return { success: false, message: "Google Calendar not configured" };
+  }
+
+  const event = await calendar.events.insert({
+    calendarId: "primary",
+    conferenceDataVersion: 1,
+    auth: auth,
+    requestBody: {
+      summary: courseName,
+      description,
+      start: {
+        dateTime: combinedStartDate.toISOString(),
+        timeZone: "Asia/Kolkata",
+      },
+      end: {
+        dateTime: new Date(endDate).toISOString(),
+        timeZone: "Asia/Kolkata",
+      },
+      conferenceData: {
+        createRequest: {
+          requestId: `${Date.now()}-${Math.random()}`,
+          conferenceSolutionKey: {
+            type: "hangoutsMeet",
+          },
+        },
+      },
+      guestsCanModify: false,
+      guestsCanInviteOthers: false,
+      guestsCanSeeOtherGuests: true,
+    },
+  });
+
+  const meetLink = event.data.hangoutLink;
+  const googleEventId = event.data.id;
+
   await Course.create({
     courseId,
     courseName,
@@ -76,12 +130,14 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     description,
     category,
     days,
-    startDate,
+    startDate: combinedStartDate,
     endDate,
     meetingDuration,
     courseMRP,
     discount,
     offerPrice,
+    meetLink,
+    googleEventId,
     thumbnail: {
       secure_url: fileUploadResult.secure_url,
       public_id: fileUploadResult.public_id,
@@ -106,10 +162,10 @@ export async function getAllCourses(
     await connectDb();
 
     const filter: Record<string, unknown> = {};
-     filter.$or = [
-       { endDate: { $exists: false } },
-       { endDate: { $gte: new Date() } },
-     ];
+    filter.$or = [
+      { endDate: { $exists: false } },
+      { endDate: { $gte: new Date() } },
+    ];
 
     if (category && category.trim() !== "") {
       filter.category = category.trim();
@@ -118,15 +174,15 @@ export async function getAllCourses(
     if (searchQuery && searchQuery.trim() !== "") {
       const searchRegex = { $regex: searchQuery.trim(), $options: "i" };
 
-     filter.$and = [
-       {
-         $or: [
-           { courseName: searchRegex },
-           { category: searchRegex },
-           { status: searchRegex },
-         ],
-       },
-     ];
+      filter.$and = [
+        {
+          $or: [
+            { courseName: searchRegex },
+            { category: searchRegex },
+            { status: searchRegex },
+          ],
+        },
+      ];
     }
 
     const pageNumber = parseInt(page as string, 10);
@@ -187,12 +243,18 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
       return { success: false, message: "Course ID required" };
     }
 
+    const course = await Course.findOne({ courseId });
+
+    if (!course) {
+      return { success: false, message: "Course not found" };
+    }
+
     const updatedData: Record<string, unknown> = {
       courseName: (formData.get("courseName") as string)?.trim(),
       description: (formData.get("description") as string)?.trim(),
       category: (formData.get("category") as string)?.trim(),
       days: (formData.get("days") as string)?.trim(),
-      startDate: formData.get("startDate"),
+      startDate: new Date(`${formData.get("startDate")}T${formData.get("startTime")}:00`),
       endDate: formData.get("endDate"),
       meetingDuration: formData.get("meetingDuration"),
       courseMRP: Number(formData.get("courseMRP")),
@@ -204,19 +266,106 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
       updatedData.courseSlug = generateSlug(updatedData.courseName as string);
     }
 
+    const newStartDate = formData.get("startDate") as string | null;
+    const newStartTime = formData.get("startTime") as string | null;
+    const newEndDate = formData.get("endDate") as string | null;
+    const newMeetingDuration = formData.get("meetingDuration") as string | null;
+
+    const combinedNewStartDate = newStartDate && newStartTime ? new Date(`${newStartDate}T${newStartTime}:00`) : null;
+
+    const startDateChanged =
+      combinedNewStartDate && course.startDate
+        ? combinedNewStartDate.getTime() !==
+          new Date(course.startDate).getTime()
+        : Boolean(combinedNewStartDate) !== Boolean(course.startDate);
+    const endDateChanged =
+      newEndDate && course.endDate
+        ? new Date(newEndDate).getTime() !== new Date(course.endDate).getTime()
+        : Boolean(newEndDate) !== Boolean(course.endDate);
+    const meetingDurationChanged =
+      newMeetingDuration !== course.meetingDuration;
+
+    if (!fsSync.existsSync(TOKEN_PATH)) {
+      return {
+        success: false,
+        message: "Please connect your Google Calendar account first",
+        authRequired: true,
+      };
+    }
+
+    const auth = getAuthClient();
+    if (!auth) {
+      return { success: false, message: "Google Calendar not configured" };
+    }
+
+    if (!course.googleEventId || !course.meetLink) {
+      const event = await calendar.events.insert({
+        calendarId: "primary",
+        conferenceDataVersion: 1,
+        auth: auth,
+        requestBody: {
+          summary: (updatedData.courseName as string) || course.courseName,
+          description:
+            (updatedData.description as string) || course.description,
+          start: {
+            dateTime: (combinedNewStartDate || new Date(course.startDate)).toISOString(),
+            timeZone: "Asia/Kolkata",
+          },
+          end: {
+            dateTime: new Date(
+              newEndDate || course.endDate || new Date(),
+            ).toISOString(),
+            timeZone: "Asia/Kolkata",
+          },
+          conferenceData: {
+            createRequest: {
+              requestId: `${Date.now()}-${Math.random()}`,
+              conferenceSolutionKey: {
+                type: "hangoutsMeet",
+              },
+            },
+          },
+          guestsCanModify: false,
+          guestsCanInviteOthers: false,
+          guestsCanSeeOtherGuests: true,
+        },
+      });
+
+      if (event.data.hangoutLink) {
+        updatedData.meetLink = event.data.hangoutLink;
+      }
+      if (event.data.id) {
+        updatedData.googleEventId = event.data.id;
+      }
+    } else if (startDateChanged || endDateChanged || meetingDurationChanged) {
+      await calendar.events.patch({
+        calendarId: "primary",
+        eventId: course.googleEventId,
+        auth: auth,
+        requestBody: {
+          summary: (updatedData.courseName as string) || course.courseName,
+          description:
+            (updatedData.description as string) || course.description,
+          start: {
+            dateTime: (combinedNewStartDate || new Date(course.startDate)).toISOString(),
+            timeZone: "Asia/Kolkata",
+          },
+          end: {
+            dateTime: new Date(
+              newEndDate || course.endDate || new Date(),
+            ).toISOString(),
+            timeZone: "Asia/Kolkata",
+          },
+        },
+      });
+    }
+
     const newThumbnail = formData.get("thumbnail") as File | null;
 
     if (newThumbnail && newThumbnail.size > 0) {
-      const course = await Course.findOne({ courseId });
-
-      if (!course) {
-        return {
-          success: false,
-          message: "Course not found for image update",
-        };
+      if (course.thumbnail?.public_id) {
+        await deleteFile(course.thumbnail.public_id);
       }
-
-      await deleteFile(course.thumbnail.public_id);
 
       const tempPath = await parseImage(newThumbnail);
       const uploadResult = await uploadFile(tempPath);
@@ -227,6 +376,7 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
           secure_url: uploadResult.secure_url,
         };
       }
+      await fs.unlink(tempPath);
     }
 
     const updatedCourse = await Course.findOneAndUpdate(

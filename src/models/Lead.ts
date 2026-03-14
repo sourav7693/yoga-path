@@ -20,6 +20,7 @@ export interface LeadDocument extends Document {
   leadId: string;
   name: string;
   mobile: string;
+  email?: string;
   enrollments: Enrollment[];
   payments: Payment[];
   status: "Lost" | "Pending" | "Enrolled";
@@ -78,7 +79,6 @@ const paymentSchema = new Schema<Payment>({
     type: String,
     required: true,
   },
-  
 });
 
 const leadSchema = new Schema<LeadDocument>(
@@ -88,12 +88,19 @@ const leadSchema = new Schema<LeadDocument>(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
 
     mobile: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      trim: true,
     },
 
     enrollments: {

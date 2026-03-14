@@ -17,6 +17,9 @@ export interface CourseDoc extends Document {
   discount?: number;
   offerPrice?: number;
 
+  meetLink?: string;
+  googleEventId?: string;
+
   thumbnail?: {
     secure_url: string;
     public_id: string;
@@ -74,6 +77,13 @@ const CourseSchema = new Schema<CourseDoc>(
     },
 
     offerPrice: Number,
+
+    meetLink: String,
+    googleEventId: {
+      type: String,
+      default: null,
+      unique: true,
+    },
 
     thumbnail: {
       secure_url: String,

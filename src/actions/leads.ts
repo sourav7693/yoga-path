@@ -8,6 +8,7 @@ import axios from "axios";
 import { Course } from "@/models/Course";
 import Razorpay from "razorpay";
 import crypto from "crypto";
+import calendar from "@/lib/googleCalendar";
 
 const leadStore = new Map<
   string,
@@ -129,6 +130,7 @@ export async function enrollCourse(prev: any, formData: FormData) {
   const courseId = formData.get("courseId") as string;
   const location = formData.get("location") as string;
   const remark = formData.get("remark") as string;
+  const email = formData.get("email") as string;
 
   mobile = mobile.startsWith("91") ? mobile : "91" + mobile;
 
@@ -155,18 +157,21 @@ export async function enrollCourse(prev: any, formData: FormData) {
 
   lead.status = "Pending";
 
+  lead.email = email;
+
   // add to course
   course.students.push(lead._id);
 
-  await lead.save();  
+  await lead.save();
 
-    return {
-      success: true,
-      message: "Course selected. Proceed to payment.",
-      courseId,
-      location,
-      remark,
-    };
+  return {
+    success: true,
+    message: "Course selected. Proceed to payment.",
+    courseId,
+    location,
+    remark,
+    email,
+  };
 }
 
 export async function createPaymentOrder(prev: unknown, formData: FormData) {
@@ -292,6 +297,28 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     lead.status = "Enrolled";
 
     course.students.push(lead._id);
+
+    const event = await calendar.events.get({
+      calendarId: "primary",
+      eventId: course.googleEventId,
+    });
+
+    const currentAttendees = event.data.attendees || [];
+
+    const newAttendee = {
+      email: lead.email,
+      displayName: lead.name,
+      responseStatus: "accepted",
+    };
+
+    await calendar.events.patch({
+      calendarId: "primary",
+      eventId: course.googleEventId,
+      requestBody: {
+        attendees: [...currentAttendees, newAttendee],
+      },
+      sendUpdates: "all", // Sends email invitations
+    });
 
     await lead.save();
     await course.save();

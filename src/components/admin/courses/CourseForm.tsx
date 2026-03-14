@@ -20,6 +20,7 @@ export default function CourseForm({
   const [mrp, setMrp] = useState<number>(0);
   const [duration, setDuration] = useState<string>("1month");
   const [startDate, setStartDate] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>("09:00");
   const [endDate, setEndDate] = useState<string>("");
   const durationMap: Record<string, number> = {
     "1month": 1,
@@ -53,14 +54,18 @@ export default function CourseForm({
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
     message: "",
-  });  
+    authRequired: false,
+  });
 
   useEffect(() => {
     if (state.success) {
       closeModal();
       toast.success(state.message);
+    } else if (state.authRequired) {
+      toast.info("Redirecting to Google to connect Calendar...");
+      window.location.href = "/api/auth/google";
     }
-  }, [state.success, state.message, closeModal]);
+  }, [state.success, state.message, state.authRequired, closeModal]);
 
   useEffect(() => {
     if (!course) return;
@@ -72,6 +77,14 @@ export default function CourseForm({
       course.startDate
         ? new Date(course.startDate).toISOString().split("T")[0]
         : "",
+    );
+    setStartTime(
+      course.startDate
+        ? new Date(course.startDate).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "09:00",
     );
     setEndDate(
       course.endDate
@@ -177,7 +190,10 @@ export default function CourseForm({
 
             <div className="w-full flex justify-between items-center gap-4">
               <div className="flex flex-col gap-2 flex-1">
-                <label htmlFor="days" className="text-defined-black font-bold">
+                <label
+                  htmlFor="startDate"
+                  className="text-defined-black font-bold"
+                >
                   Start Date
                 </label>
                 <input
@@ -194,7 +210,23 @@ export default function CourseForm({
               </div>
 
               <div className="flex flex-col gap-2 flex-1">
-                <label htmlFor="days" className="text-defined-black font-bold">
+                <label
+                  htmlFor="startTime"
+                  className="text-defined-black font-bold"
+                >
+                  Start Time
+                </label>
+                <input
+                  type="time"
+                  name="startTime"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none focus:ring ring-defined-red"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 flex-1">
+                <label htmlFor="endDate" className="text-defined-black font-bold">
                   End Date
                 </label>
                 <input
