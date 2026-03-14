@@ -323,6 +323,24 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     await lead.save();
     await course.save();
 
+    const payload = {
+      "auth-key": process.env.WA_AUTH_KEY,
+      "app-key": process.env.WA_APP_KEY,
+      destination_number: mobile,
+      template_id: process.env.WA_ENROLL_TEMPLATE_ID,
+      device_id: process.env.WA_DEVICE_ID,
+      language: "en",
+      variables: [
+        course.sessionTime?.toString() || "",
+        course.duration?.toString() || "",
+        course.meetingLink?.toString() || "",
+      ],
+    };
+
+   axios
+     .post("https://web.wabridge.com/api/createmessage", payload)
+     .catch((err) => console.error("Whatsapp send failed", err));
+
     return {
       success: true,
       message: "Enrollment successful! Check your Whatsapp for the receipt",
