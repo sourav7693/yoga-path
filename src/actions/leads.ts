@@ -8,7 +8,9 @@ import axios from "axios";
 import { Course } from "@/models/Course";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import calendar from "@/lib/googleCalendar";
+import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import fs from "fs";
+
 
 const leadStore = new Map<
   string,
@@ -298,9 +300,19 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
 
     course.students.push(lead._id);
 
+    if (!fs.existsSync(TOKEN_PATH)) {
+      return {
+        success: false,
+        message: "Google Calendar not connected. Please contact admin.",
+      };
+    }
+
+    const auth = getAuthClient();
+
     const event = await calendar.events.get({
       calendarId: "primary",
       eventId: course.googleEventId,
+      auth,
     });
 
     const currentAttendees = event.data.attendees || [];
@@ -317,6 +329,7 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
       requestBody: {
         attendees: [...currentAttendees, newAttendee],
       },
+      auth,
       sendUpdates: "all", // Sends email invitations
     });
 
