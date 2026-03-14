@@ -8,7 +8,6 @@ import { Course } from "@/models/Course";
 import { generateSlug } from "@/helper/generateSlug";
 import { revalidatePath } from "next/cache";
 import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
-import fs from "fs/promises";
 import fsSync from "fs";
 
 export async function createCourse(prevState: unknown, formData: FormData) {
@@ -74,9 +73,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
 
   if (fileUploadResult instanceof Error) {
     return { success: false, message: "Image upload failed" };
-  }
-
-  await fs.unlink(tempFilePath);
+  }  
 
   if (!fsSync.existsSync(TOKEN_PATH)) {
     return {
@@ -375,8 +372,7 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
           public_id: uploadResult.public_id,
           secure_url: uploadResult.secure_url,
         };
-      }
-      await fs.unlink(tempPath);
+      }      
     }
 
     const updatedCourse = await Course.findOneAndUpdate(
