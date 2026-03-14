@@ -26,14 +26,14 @@ export async function signup(formData: FormData) {
   }
   if (password.length < 6) {
     return {
-      success: false,    
+      success: false,
       message: "Password must be at least 6 characters long",
     };
   }
- 
+
   if (mobile) {
     mobile = mobile.startsWith("91") ? mobile : "91" + mobile;
-  }   
+  }
   const existingMobile = await User.findOne({ mobile });
   if (existingMobile) {
     return {
@@ -60,7 +60,7 @@ export async function signup(formData: FormData) {
 
   await newUser.save();
 
-  redirect("/login");  
+  redirect("/login");
 }
 
 export async function login(formData: FormData) {
@@ -117,7 +117,7 @@ export async function login(formData: FormData) {
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 30, // 30 days
     path: "/",
-  });    
+  });
   redirect("/admin/dashboard");
 }
 
@@ -130,7 +130,7 @@ export async function sendWhatsappOtp(formData: FormData) {
     return { success: false, message: "Mobile required" };
   }
 
-  const formattedMobile = mobile.startsWith("91") ? mobile : "91" + mobile;  
+  const formattedMobile = mobile.startsWith("91") ? mobile : "91" + mobile;
 
   const user = await User.findOne({ formattedMobile });
 
@@ -230,7 +230,7 @@ export async function logout() {
     expires: new Date(0),
   });
 
-  redirect("/login");  
+  redirect("/login");
 }
 
 export async function getUser() {
