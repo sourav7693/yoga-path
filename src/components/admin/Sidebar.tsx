@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MdOutlineDashboard, MdOutlineLogout } from "react-icons/md";
+import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi";
 import { TiUserAdd } from "react-icons/ti";
 import { FaImages } from "react-icons/fa";
 import { BsFillBarChartLineFill } from "react-icons/bs";
-import { IoIosSettings } from "react-icons/io";
 import Image from "next/image";
 
 export default function Sidebar() {
@@ -37,17 +36,7 @@ export default function Sidebar() {
       icon: <BsFillBarChartLineFill size={20} />,
       label: "Analytics",
       href: "/admin/dashboard",
-    },
-    {
-      icon: <IoIosSettings size={20} />,
-      label: "Settings",
-      href: "/admin/dashboard",
-    },
-    {
-      icon: <MdOutlineLogout size={20} />,
-      label: "Logout",
-      href: "/admin/dashboard",
-    },
+    }, 
   ];
 
   return (
@@ -100,7 +89,7 @@ export default function Sidebar() {
 
         {/* Menu */}
         <nav className="flex flex-col gap-2 flex-1">
-          {menu.slice(0, 5).map((item, index) => (
+          {menu.map((item, index) => (
             <SidebarItem
               key={index}
               icon={item.icon}
@@ -110,19 +99,6 @@ export default function Sidebar() {
             />
           ))}
         </nav>
-
-        {/* Bottom Section */}
-        <div className="mt-auto flex flex-col gap-2">
-          {menu.slice(5, 7).map((item, index) => (
-            <SidebarItem
-              key={index}
-              icon={item.icon}
-              label={item.label}
-              href={item.href}
-              isExpanded={isExpanded}
-            />
-          ))}
-        </div>
       </div>
     </aside>
   );

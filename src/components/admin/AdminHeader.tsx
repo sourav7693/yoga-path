@@ -117,6 +117,7 @@ const AdminHeader = ({ username, logout }: User) => {
               ✕
             </button>
             {/* <ResetPasswordForm /> */}
+            Reset password division has not been added yet!
           </div>
         </div>
       )}

@@ -288,7 +288,7 @@ export default function FormModal({
   return (
     <div
       className="fixed inset-0 bg-black/60 backdrop-blur-md 
-                 flex items-center justify-center 
+                 flex items-center justify-center
                  z-[999] p-4"
       onClick={onClose}
     >
@@ -296,7 +296,7 @@ export default function FormModal({
         className="relative w-full max-w-md 
                    rounded-2xl p-6 
                    bg-white/10 backdrop-blur-xl
-                   border border-white/20 
+                   border border-white/20 flex flex-col gap-2
                    shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -312,6 +312,36 @@ export default function FormModal({
         <h3 className="text-[17px] font-semibold text-white text-left">
           Lets Talk to Our Counsellors
         </h3>
+
+        {/* Step Indicator */}
+        <div className="flex items-center justify-center mt-3">
+          {[1, 2, 3].map((s, i) => (
+            <div key={s} className="flex items-center">
+              <div
+                className={`w-9 h-9 flex items-center justify-center rounded-full
+        text-sm font-semibold transition-all duration-300
+        ${
+          step >= s
+            ? "bg-green-500 text-white shadow-[0_0_10px_rgba(34,197,94,0.8)]"
+            : "bg-white/20 text-white/60"
+        }`}
+              >
+                {s}
+              </div>
+
+              {i < 2 && (
+                <div
+                  className={`w-10 h-[2px] ${
+                    step > s ? "bg-green-500" : "bg-white/30"
+                  }`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-xs text-white/60 mb-3">
+          Step {step} of 3
+        </p>
 
         <h4 className="text-[14px] font-semibold text-white/80 text-left mb-4">
           Fill out the form below to get started!

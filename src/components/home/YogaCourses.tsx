@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const YogaCourses = ({ courses }: { courses: CourseDoc[] }) => {
   return (
-    <section className="py-4 flex flex-col gap-6 max-w-325 mx-auto">
+    <section className="py-4 flex flex-col gap-6 max-w-300 mx-auto">
       <h2 className="text-3xl md:text-4xl font-bold text-center">
         Our Course Module
       </h2>

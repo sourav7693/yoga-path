@@ -336,6 +336,24 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     await lead.save();
     await course.save();
 
+    const start = event.data.start?.dateTime || event.data.start?.date;
+    const end = event.data.end?.dateTime || event.data.end?.date;
+
+    const sessionTime = start
+      ? new Date(start).toLocaleString("en-IN", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        })
+      : "";
+
+    const meetingLink = event.data.hangoutLink || course.meetLink || "";
+
+console.log("WA variables", [
+  sessionTime,
+  course.meetingDuration?.toString() || "",
+  meetingLink,
+]);
+
     const payload = {
       "auth-key": process.env.WA_AUTH_KEY,
       "app-key": process.env.WA_APP_KEY,
@@ -343,11 +361,7 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
       template_id: process.env.WA_ENROLL_TEMPLATE_ID,
       device_id: process.env.WA_DEVICE_ID,
       language: "en",
-      variables: [
-        course.sessionTime?.toString() || "",
-        course.duration?.toString() || "",
-        course.meetingLink?.toString() || "",
-      ],
+      variables: [sessionTime,  course.meetingDuration?.toString() || "", meetingLink],
     };
 
    axios
@@ -373,27 +387,21 @@ export async function getAllLeads(
   limit: number | string = 10,
   sort: string = "createdAt",
   order: "asc" | "desc" = "desc",
-  searchQuery?: string,
-  status?: string,
+  searchQuery?: string,  
 ) {
   try {
     await connectDb();
 
-    const filter: Record<string, any> = {};
-
-    if (status && status.trim() !== "") {
-      filter.status = status.trim();
-    }
-
-    if (searchQuery && searchQuery.trim() !== "") {
-      const searchRegex = { $regex: searchQuery.trim(), $options: "i" };
-
-      filter.$or = [
-        { name: searchRegex },
-        { mobile: searchRegex },
-        { leadId: searchRegex },
-      ];
-    }
+   const filter =
+     searchQuery && searchQuery.trim() !== ""
+       ? {
+           $or: [
+             { name: { $regex: searchQuery, $options: "i" } },
+             { mobile: { $regex: searchQuery, $options: "i" } },
+             { leadId: { $regex: searchQuery, $options: "i" } },
+           ],
+         }
+       : {};       
 
     const pageNumber = parseInt(page as string, 10);
     const pageSize = parseInt(limit as string, 10);
