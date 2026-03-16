@@ -42,8 +42,8 @@ const Whatsapp: React.FC<FooterWhatsappProps> = ({
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(14 14) rotate(90) scale(14)"
         >
-          <stop offset="0.322115" stopColor="white" stop-opacity="0" />
-          <stop offset="1" stopColor="white" stop-opacity="0.6" />
+          <stop offset="0.322115" stopColor="white" stopOpacity="0" />
+          <stop offset="1" stopColor="white" stopOpacity="0.6" />
         </radialGradient>
       </defs>
     </svg>

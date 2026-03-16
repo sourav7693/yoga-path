@@ -300,59 +300,69 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
 
     course.students.push(lead._id);
 
-    if (!fs.existsSync(TOKEN_PATH)) {
-      return {
-        success: false,
-        message: "Google Calendar not connected. Please contact admin.",
-      };
+    let sessionTime = "";
+    let meetingLink = course.meetLink || "";
+
+    if (course.googleEventId) {
+      try {
+        const auth = getAuthClient();
+        const event = await calendar.events.get({
+          calendarId: "primary",
+          eventId: course.googleEventId,
+          auth,
+        });
+
+        const currentAttendees = event.data.attendees || [];
+
+        const newAttendee = {
+          email: lead.email,
+          displayName: lead.name,
+          responseStatus: "accepted",
+        };
+
+        await calendar.events.patch({
+          calendarId: "primary",
+          eventId: course.googleEventId,
+          requestBody: {
+            attendees: [...currentAttendees, newAttendee],
+          },
+          auth,
+          sendUpdates: "all", // Sends email invitations
+        });
+
+        const start = event.data.start?.dateTime || event.data.start?.date;
+        if (start) {
+          sessionTime = new Date(start).toLocaleString("en-IN", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          });
+        }
+        meetingLink = event.data.hangoutLink || course.meetLink || "";
+      } catch (calendarErr: any) {
+        console.error("Google Calendar operation failed:", calendarErr.message);
+        // Fallback for session time if event is missing
+        if (course.startDate) {
+          sessionTime = new Date(course.startDate).toLocaleString("en-IN", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          });
+        }
+      }
+    } else if (course.startDate) {
+      sessionTime = new Date(course.startDate).toLocaleString("en-IN", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
     }
-
-    const auth = getAuthClient();
-
-    const event = await calendar.events.get({
-      calendarId: "primary",
-      eventId: course.googleEventId,
-      auth,
-    });
-
-    const currentAttendees = event.data.attendees || [];
-
-    const newAttendee = {
-      email: lead.email,
-      displayName: lead.name,
-      responseStatus: "accepted",
-    };
-
-    await calendar.events.patch({
-      calendarId: "primary",
-      eventId: course.googleEventId,
-      requestBody: {
-        attendees: [...currentAttendees, newAttendee],
-      },
-      auth,
-      sendUpdates: "all", // Sends email invitations
-    });
 
     await lead.save();
     await course.save();
 
-    const start = event.data.start?.dateTime || event.data.start?.date;
-    const end = event.data.end?.dateTime || event.data.end?.date;
-
-    const sessionTime = start
-      ? new Date(start).toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })
-      : "";
-
-    const meetingLink = event.data.hangoutLink || course.meetLink || "";
-
-console.log("WA variables", [
-  sessionTime,
-  course.meetingDuration?.toString() || "",
-  meetingLink,
-]);
+    console.log("WA variables", [
+      sessionTime,
+      course.meetingDuration?.toString() || "",
+      meetingLink,
+    ]);
 
     const payload = {
       "auth-key": process.env.WA_AUTH_KEY,

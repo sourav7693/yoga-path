@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postbuild": "xcopy .next\\static .next\\standalone\\.next\\static /E /I /Y && xcopy public .next\\standalone\\public /E /I /Y && copy .env .next\\standalone\\.env"
   },
   "dependencies": {
     "axios": "^1.13.6",
