@@ -84,7 +84,7 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
         </div>
       </div>
 
-      {openForm && <FormModal onClose={() => setOpenForm(false)} courses={courses} />}
+      {openForm && <FormModal mode="modal" onClose={() => setOpenForm(false)} courses={courses} />}
     </div>
   );
 }
