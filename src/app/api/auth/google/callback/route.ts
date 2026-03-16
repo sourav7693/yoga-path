@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { oAuth2Client, TOKEN_PATH } from "@/lib/googleCalendar";
+import { getAuthClient, TOKEN_PATH } from "@/lib/googleCalendar";
 import fs from "fs";
 
 export async function GET(request: Request) {
@@ -9,6 +9,8 @@ export async function GET(request: Request) {
   if (!code) {
     return NextResponse.json({ error: "No code provided" }, { status: 400 });
   }
+
+  const oAuth2Client = getAuthClient();
 
   if (!oAuth2Client) {
     return NextResponse.json(
