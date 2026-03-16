@@ -14,7 +14,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section className="w-full bg-white md:py-4 py-4 px-4" id="about">
+    <section id="about" className="w-full bg-white md:py-4 py-4 px-4">
       <div className="w-full max-w-[1300px] mx-auto  grid grid-cols-1  md:grid-cols-2 gap-12 items-stretch">
         {/* LEFT CONTENT */}
         <div className="flex flex-col justify-between h-full">

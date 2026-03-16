@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 
 import WhatsappFooter from "@/components/SvgIcon/Whatsapp";
+import { IoLogoInstagram } from "react-icons/io";
 // import LogoWhite from "../SvgIcon/LogoWhite";
 
 const quickLinks = [
@@ -61,8 +62,8 @@ export default function Footer() {
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
     const whatsappUrl = isDesktop
-      ? `https://web.whatsapp.com/send?phone=+919144411138&text=${encodedMessage}`
-      : `https://api.whatsapp.com/send?phone=+919144411138&text=${encodedMessage}`;
+      ? `https://web.whatsapp.com/send?phone=917908623983&text=${encodedMessage}`
+      : `https://api.whatsapp.com/send?phone=917908623983&text=${encodedMessage}`;
 
     window.open(whatsappUrl, "_blank");
 
@@ -152,7 +153,7 @@ export default function Footer() {
               </h4>
               <ul className="space-y-3 text-[17px]">
                 <li className="flex items-start gap-2 text-white">
-                  <FaMapMarkerAlt size={25} className="text-defined-brown " />
+                  <FaMapMarkerAlt size={20} className="text-white " />
                   <Link
                     href="https://maps.app.goo.gl/EwwTNkuAqEUeQhwc9"
                     target="_blank"
@@ -161,14 +162,24 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li className="flex items-center gap-2 text-white">
-                  <FaPhoneAlt size={16} className="text-defined-brown" />
-                  <Link href="tel:+91123456789">Call Us: +91123456789</Link>
+                  <FaPhoneAlt size={16} className="text-white" />
+                  <Link href="tel:+917908623983">Call Us: +91 79086 23983</Link>
                 </li>
 
                 <li className="flex items-center gap-2 text-white">
-                  <FaEnvelope size={16} className="text-defined-brown" />
+                  <FaEnvelope size={16} className="text-white" />
                   <Link href="mailto:theyogapath@gmail.com">
                     theyogapath@gmail.com
+                  </Link>
+                </li>
+                <li className="flex items-center gap-2 text-white">
+                  <IoLogoInstagram size={20} className="text-white" />
+                  <Link
+                    href="https://www.instagram.com/theyogapath_bypayel"
+                    target="_blank"
+                    className="underline"
+                  >
+                    theyogapath_bypayel
                   </Link>
                 </li>
               </ul>

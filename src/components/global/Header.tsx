@@ -26,7 +26,7 @@ export default function TransparentHeader() {
           {/* WhatsApp */}
           <div className="flex items-center gap-4">
             <a
-              href="https://wa.me/+91123456789"
+              href="https://wa.me/917908623983"
               target="_blank"
               className="group flex items-center justify-center 
           md:px-4 px-3 md:py-2 py-1 rounded-full 
@@ -38,7 +38,7 @@ export default function TransparentHeader() {
               <FaWhatsapp className="text-2xl text-defined-red group-hover:scale-110 transition-all duration-300 mr-2" />
 
               <span className="text-xs md:text-sm text-defined-blue">
-                +91 123456789
+                +91 7908623983
               </span>
             </a>
           </div>

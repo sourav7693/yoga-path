@@ -15,7 +15,7 @@ export default async function Home() {
   const reels = reelsResult.data;
   return (
     <MainTemplates>
-      <HomeBanner />
+      <HomeBanner courses={courses}/>
       <AboutSection />
       <OurSucessStory reels={reels}/>
       <YogaCourses courses={courses} />

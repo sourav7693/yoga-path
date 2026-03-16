@@ -11,6 +11,7 @@ import {
 import { useEffect, useState, useActionState, startTransition } from "react";
 import { toast } from "react-toastify";
 import { CourseDoc } from "@/models/Course";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 type SelectedCourse = {
   courseId: string;
@@ -68,9 +69,11 @@ async function loadRazorpayScript(): Promise<void> {
 export default function FormModal({
   onClose,
   courses,
+  mode = "modal",
 }: {
-  onClose: () => void;
+  onClose?: () => void;
   courses: CourseDoc[];
+  mode: "modal" | "inline";
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [otpMode, setOtpMode] = useState(false);
@@ -123,19 +126,30 @@ export default function FormModal({
     null,
   );
 
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+useEffect(() => {
+  if (!onClose) return; // inline form, no modal behaviour
 
-    document.addEventListener("keydown", handleEsc);
+  const handleEsc = (e: KeyboardEvent) => {
+    if (e.key === "Escape") onClose();
+  };
+
+  document.addEventListener("keydown", handleEsc);
+  document.body.style.overflow = "hidden";
+
+  return () => {
+    document.removeEventListener("keydown", handleEsc);
+    document.body.style.overflow = "auto";
+  };
+}, [onClose]);
+
+useEffect(() => {
+  if (mode === "modal") {
     document.body.style.overflow = "hidden";
-
     return () => {
-      document.removeEventListener("keydown", handleEsc);
       document.body.style.overflow = "auto";
     };
-  }, [onClose]);
+  }
+}, [mode]);
 
   useEffect(() => {
     if (!otpState) return;
@@ -248,7 +262,7 @@ export default function FormModal({
           if (enroll.success) {
             toast.success(enroll.message || "Enrollment successful");
             setStep(1);
-            onClose();
+            onClose?.();
           } else {
             toast.error(enroll.message || "Enrollment failed");
           }
@@ -258,7 +272,7 @@ export default function FormModal({
         modal: {
           ondismiss: () => {
             toast.info("Payment cancelled");
-            onClose();
+            onClose?.();
           },
         },
         prefill: {
@@ -287,29 +301,44 @@ export default function FormModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-md 
-                 flex items-center justify-center
-                 z-[999] p-4"
+      className={
+        mode === "modal"
+          ? "fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[999] p-4"
+          : "relative w-full"
+      }
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md 
-                   rounded-2xl p-6 
-                   bg-white/10 backdrop-blur-xl
-                   border border-white/20 flex flex-col gap-2
-                   shadow-2xl"
+        className={`relative w-full max-w-md
+  rounded-2xl p-6
+  border flex flex-col gap-2 shadow-2xl
+  ${
+    mode === "modal"
+      ? "bg-white/10 backdrop-blur-xl border-white/20"
+      : "bg-black/50 backdrop-blur-xl border-gray-200"
+  }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 
+        {mode === "modal" && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 
                      text-white text-xl 
                      hover:scale-110 transition"
-        >
-          ✕
-        </button>
+          >
+            ✕
+          </button>
+        )}
 
-        <h3 className="text-[17px] font-semibold text-white text-left">
+        <h3 className="text-[17px] font-semibold text-white text-left flex items-center gap-2">
+          {step > 1 && (
+            <button onClick={() => {
+  if (step === 2) setStep(1);
+  if (step === 3) setStep(2);
+}}>
+              <IoMdArrowRoundBack className="text-xl hover:scale-110 transition" />
+            </button>
+          )}
           Lets Talk to Our Counsellors
         </h3>
 
@@ -354,6 +383,7 @@ export default function FormModal({
                 type="text"
                 name="name"
                 disabled={otpMode}
+                value={formData.name}
                 placeholder="Name"
                 onChange={(e) =>
                   setFormData((p) => ({ ...p, name: e.target.value }))
@@ -365,6 +395,7 @@ export default function FormModal({
               <input
                 type="tel"
                 name="mobile"
+                value={formData.mobile}
                 disabled={otpMode}
                 placeholder="Mobile Number"
                 onChange={(e) =>

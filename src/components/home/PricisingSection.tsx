@@ -96,7 +96,7 @@ export default function PricingSection({courses} : {courses : CourseDoc[]}) {
         </div>
       </section>
 
-      {openForm && <FormModal onClose={() => setOpenForm(false)} courses={courses}/>}
+      {openForm && <FormModal mode="modal" onClose={() => setOpenForm(false)} courses={courses}/>}
     </>
   );
 }

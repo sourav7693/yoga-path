@@ -16,7 +16,6 @@ const WhyChoose: React.FC = () => {
   return (
     <section className="w-full py-20 bg-[#f9f9f9]" id="whyus">
       <div className="max-w-[1300px] mx-auto px-4">
-
         {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold">
@@ -31,7 +30,6 @@ const WhyChoose: React.FC = () => {
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
-
           <FeatureCard
             image="/assets/whyus/121027193.avif"
             title="Find Calm"
@@ -41,7 +39,7 @@ const WhyChoose: React.FC = () => {
               "Improves sleep quality",
               "Learn powerful breathwork",
             ]}
-            author="By Shynee Narang"
+            author="By Payel Sarkar"
           />
 
           <FeatureCard
@@ -53,7 +51,7 @@ const WhyChoose: React.FC = () => {
               "Build core strength",
               "Maintain healthy weight",
             ]}
-            author="By Apurva Tilwani"
+            author="By Payel Sarkar"
           />
 
           <FeatureCard
@@ -65,7 +63,7 @@ const WhyChoose: React.FC = () => {
               "Improve digestion & posture",
               "Rebalance lifestyle habits",
             ]}
-            author="By The Yoga Institute"
+            author="By Payel Sarkar"
           />
 
           <FeatureCard
@@ -77,9 +75,8 @@ const WhyChoose: React.FC = () => {
               "Gain spiritual clarity & emotional balance",
               "Elevate daily life through inner peace",
             ]}
-            author="By Yogacharya Surakshit Goswami"
+            author="By Payel Sarkar"
           />
-
         </div>
       </div>
     </section>

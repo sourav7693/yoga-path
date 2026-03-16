@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
-import ContactForm from "../global/ContactForm";
 import InfoCard from "./InfoCard";
 import { useState } from "react";
 import FormModal from "../global/FormModal";
 import Link from "next/link";
+import { CourseDoc } from "@/models/Course";
 
-export default function HomeBanner() {
+export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
   const [openForm, setOpenForm] = useState(false);
   return (
     <section className="relative w-full min-h-screen md:mt-[-80px] mt-[-40px]">
@@ -29,7 +29,7 @@ export default function HomeBanner() {
 
             <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-5 text-defined-blue">
               Siliguri Based Professional <br></br>{" "}
-              <span className="text-defined-red">Yoga Training</span>Program
+              <span className="text-defined-red">Yoga Training</span> Program
             </h1>
 
             <p className="max-w-[600px] text-defined-blue mb-8">
@@ -40,15 +40,18 @@ export default function HomeBanner() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button 
-               onClick={() => setOpenForm(true)}
-              className="group flex items-center gap-3 bg-defined-red hover:bg-red-700 transition px-6 py-3 rounded-full"
+              <button
+                onClick={() => setOpenForm(true)}
+                className="group flex items-center gap-3 bg-defined-red hover:bg-red-700 transition px-6 py-3 rounded-full"
               >
                 Get Started
                 <FaArrowRight className="group-hover:translate-x-1 transition" />
               </button>
 
-              <Link href="#about" className="group flex items-center gap-3 bg-white/5 backdrop-blur-md border border-gray-100 hover:bg-white/30 transition px-6 py-3 rounded-full text-defined-blue">
+              <Link
+                href="#about"
+                className="group flex items-center gap-3 bg-white/5 backdrop-blur-md border border-gray-100 hover:bg-white/30 transition px-6 py-3 rounded-full text-defined-blue"
+              >
                 Learn More
                 <FaArrowRight className="group-hover:translate-x-1 transition" />
               </Link>
@@ -56,13 +59,9 @@ export default function HomeBanner() {
           </div>
 
           <div className="flex items-center justify-end">
-            <div
-              className="w-full max-w-[380px] rounded-xl p-2 md:p-6 
-                            backdrop-blur-lg
-                           border border-white/5 shadow-lg"
-            >
-              <ContactForm />
-            </div>
+           
+              <FormModal mode="inline" courses={courses} />
+            
           </div>
         </div>
       </div>
@@ -71,8 +70,13 @@ export default function HomeBanner() {
         <InfoCard />
       </div>
 
-       {openForm && <FormModal onClose={() => setOpenForm(false)} courses={[]}/>}
+      {openForm && (
+        <FormModal
+          mode="modal"
+          onClose={() => setOpenForm(false)}
+          courses={[]}
+        />
+      )}
     </section>
-    
   );
 }
