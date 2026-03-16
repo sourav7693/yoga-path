@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/autoplay";
+
+:root {
+  --background: #ffffff;
+ 
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-defined-red: #FC4456;
+  --color-defined-blue: #003D5D;
+  --color-defined-black: #0F172A;
+  --color-defined-brown: #64748B;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+button{
+  @apply hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-spin-slow {
+  animation: spinSlow 10s linear infinite;
+}
+
+.no-scrollbar {
+  /* Firefox */
+  scrollbar-width: none;
+  
+  /* IE/Edge */
+  -ms-overflow-style: none;
+}
+
+/* Chrome/Safari/Webkit */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+.animated-glow-btn {
+  position: relative;
+  padding: 12px 28px;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+
+  background: linear-gradient(270deg, #ff6a00, #ff0080, #7928ca, #00c6ff);
+  background-size: 400% 400%;
+
+  animation: gradientMove 6s ease infinite, glowMove 6s ease infinite;
+  transition: transform 0.3s ease;
+}
+
+/* 4 Side Glow */
+@keyframes glowMove {
+  0% {
+    box-shadow:
+      0 0 8px #ff6a00,
+      0 0 16px #ff0080,
+      0 0 24px #7928ca,
+      0 0 32px #00c6ff;
+  }
+  50% {
+    box-shadow:
+      0 0 8px #00c6ff,
+      0 0 16px #7928ca,
+      0 0 24px #ff0080,
+      0 0 32px #ff6a00;
+  }
+  100% {
+    box-shadow:
+      0 0 8px #ff6a00,
+      0 0 16px #ff0080,
+      0 0 24px #7928ca,
+      0 0 32px #00c6ff;
+  }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-glow-btn:hover {
+  transform: scale(1.07);
+}
+
+
+
+
+
+@media (max-width: 768px) {
+
+  .animated-glow-btn {
+    position: relative;
+    overflow: hidden;   
+    border-radius: 4px;
+    background: linear-gradient(90deg, #d54efa, #e591f2);
+    animation: none; /* remove desktop animation */
+    box-shadow: none;
+  }
+
+  .animated-glow-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    height: 100%;
+    width: 50%;
+
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.6),
+      transparent 70%
+    );
+
+    transform: skewX(-25deg);
+    animation: shineMove 1.5s linear infinite;
+  }
+
+  @keyframes shineMove {
+    0% {
+      left: -60%;
+    }
+    100% {
+      left: 120%;
+    }
+  }
+}

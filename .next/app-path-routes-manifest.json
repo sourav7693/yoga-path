@@ -1,0 +1,19 @@
+{
+  "/(protected)/admin/dashboard/page": "/admin/dashboard",
+  "/(protected)/admin/manage-course/page": "/admin/manage-course",
+  "/(protected)/admin/manage-leads/page": "/admin/manage-leads",
+  "/(protected)/admin/reel/page": "/admin/reel",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/auth/google/callback/route": "/api/auth/google/callback",
+  "/api/auth/google/route": "/api/auth/google",
+  "/cancellation-policy/page": "/cancellation-policy",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/page": "/",
+  "/privacy-policy/page": "/privacy-policy",
+  "/refurnd-policy/page": "/refurnd-policy",
+  "/shiping-policy/page": "/shiping-policy",
+  "/signup/page": "/signup",
+  "/terms-and-condition/page": "/terms-and-condition"
+}
