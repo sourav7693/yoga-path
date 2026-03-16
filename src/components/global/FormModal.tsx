@@ -484,6 +484,7 @@ useEffect(() => {
               <input
                 type="email"
                 name="email"
+                required
                 placeholder="Email"
                 className={inputClass}
               />
