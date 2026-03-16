@@ -478,6 +478,7 @@ useEffect(() => {
               <input
                 type="text"
                 name="location"
+                required
                 placeholder="Location"
                 className={inputClass}
               />
@@ -492,6 +493,7 @@ useEffect(() => {
               <input
                 type="text"
                 name="remark"
+                required
                 placeholder="Remark"
                 className={`${inputClass} rounded-bl-[10px] rounded-br-[10px]`}
               />
