@@ -365,11 +365,11 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     await lead.save();
     await course.save();
 
-    console.log("WA variables", [
-      sessionTime,
-      course.meetingDuration?.toString() || "",
-      meetingLink,
-    ]);
+    // console.log("WA variables", [
+    //   sessionTime,
+    //   course.meetingDuration?.toString() || "",
+    //   meetingLink,
+    // ]);
 
     const payload = {
       "auth-key": process.env.WA_AUTH_KEY,

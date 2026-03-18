@@ -72,7 +72,7 @@ export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
         <FormModal
           mode="modal"
           onClose={() => setOpenForm(false)}
-          courses={[]}
+          courses={courses}
         />
       )}
     </section>
