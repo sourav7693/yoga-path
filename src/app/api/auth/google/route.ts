@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { oAuth2Client } from "@/lib/googleCalendar";
+import { getAuthClient } from "@/lib/googleCalendar";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar.events"];
 
 export async function GET() {
+  const oAuth2Client = getAuthClient();
+
   if (!oAuth2Client) {
     return NextResponse.json(
       { error: "Google OAuth client not configured" },

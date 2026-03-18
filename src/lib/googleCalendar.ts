@@ -2,7 +2,6 @@ import path from "path";
 import { google } from "googleapis";
 import fs from "fs";
 
-const CREDENTIALS_PATH = path.join(process.cwd(), "service-account-key.json");
 const TOKEN_PATH = path.join(process.cwd(), "google-tokens.json");
 
 let oAuth2Client: any = null;
@@ -10,17 +9,21 @@ let oAuth2Client: any = null;
 const getAuthClient = () => {
   if (!oAuth2Client) {
     try {
-      const content = fs.readFileSync(CREDENTIALS_PATH, "utf8");
-      const credentials = JSON.parse(content);
-      const { client_secret, client_id, redirect_uris } =
-        credentials.installed || credentials.web;
+      const client_id = process.env.GOOGLE_CLIENT_ID;
+      const client_secret = process.env.GOOGLE_CLIENT_SECRET;
+      const redirect_uri = process.env.GOOGLE_REDIRECT_URL;
+
+      if (!client_id || !client_secret || !redirect_uri) {
+        throw new Error("Missing Google OAuth environment variables");
+      }
+
       oAuth2Client = new google.auth.OAuth2(
         client_id,
         client_secret,
-        redirect_uris[0],
+        redirect_uri,
       );
     } catch (error) {
-      console.error("Error loading Google Cloud credentials:", error);
+      console.error("Error initializing Google OAuth client:", error);
       return null;
     }
   }
@@ -44,4 +47,8 @@ const calendar = google.calendar({
 });
 
 export { oAuth2Client, TOKEN_PATH, getAuthClient };
+
+// Initialize the client on module load if credentials exist
+getAuthClient();
+
 export default calendar;
