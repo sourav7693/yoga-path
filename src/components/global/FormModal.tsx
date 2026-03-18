@@ -303,7 +303,7 @@ useEffect(() => {
     <div
       className={
         mode === "modal"
-          ? "fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[999] p-4"
+          ? "fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-999 p-4 w-full"
           : "relative w-full"
       }
       onClick={onClose}

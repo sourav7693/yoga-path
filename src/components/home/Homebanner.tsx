@@ -11,7 +11,7 @@ import { CourseDoc } from "@/models/Course";
 export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
   const [openForm, setOpenForm] = useState(false);
   return (
-    <section className="relative w-full min-h-screen md:mt-[-80px] mt-[-40px]">
+    <section className="relative w-full min-h-screen md:mt-[-80px] mt-[-40px]  md:py-10 py-2 md:pt-10 pt-18">
       <Image
         src="/assets/global/homebanerbg.avif"
         alt="Banner"
@@ -20,7 +20,7 @@ export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
         className="object-container"
       />
 
-      <div className="relative w-full max-w-[1300px] mx-auto px-4 md:py-10 py-30">
+      <div className="relative w-full max-w-[1300px] mx-auto px-4 md:py-10 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 md:pt-35">
           <div className="text-white flex flex-col justify-center">
             <button className="self-start mb-6 px-6 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/90 text-sm text-defined-red">
@@ -58,10 +58,8 @@ export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
             </div>
           </div>
 
-          <div className="flex items-center justify-end">
-           
-              <FormModal mode="inline" courses={courses} />
-            
+          <div className="flex items-center justify-end w-full">
+            <FormModal mode="inline" courses={courses} />
           </div>
         </div>
       </div>

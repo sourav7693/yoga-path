@@ -42,7 +42,7 @@ const CardContent: React.FC<CardContentProps> = ({ item }) => (
 
 const InfoCard: React.FC = () => {
   return (
-    <section className="px-4 pt-4 pb-4 md:py-20">
+    <section className="px-4 py-2">
       <div className="max-w-[1300px] mx-auto">
 
         {/* 🔹 Desktop Grid (UNCHANGED) */}

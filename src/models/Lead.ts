@@ -10,10 +10,11 @@ export interface Payment {
   paidAt: Date;
 }
 export interface Enrollment {
-  course: Types.ObjectId;
+  course?: Types.ObjectId;
   location?: string;
   remark?: string;
-  enrolledAt: Date;
+  enrolledAt?: Date;
+  status?: "Lost" | "Pending" | "Enrolled";
 }
 
 export interface LeadDocument extends Document {
@@ -22,15 +23,15 @@ export interface LeadDocument extends Document {
   mobile: string;
   email?: string;
   enrollments: Enrollment[];
-  payments: Payment[];
-  status: "Lost" | "Pending" | "Enrolled";
+  payments: Payment[];  
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const enrollmentSchema = new Schema<Enrollment>({
   course: {
     type: Schema.Types.ObjectId,
-    ref: "Course",
-    required: true,
+    ref: "Course",    
   },
 
   location: String,
@@ -40,6 +41,12 @@ const enrollmentSchema = new Schema<Enrollment>({
   enrolledAt: {
     type: Date,
     default: Date.now,
+  },
+
+  status: {
+    type: String,
+    enum: ["Lost", "Pending", "Enrolled"],
+    default: "Lost",
   },
 });
 
@@ -111,13 +118,7 @@ const leadSchema = new Schema<LeadDocument>(
     payments: {
       type: [paymentSchema],
       default: [],
-    },
-
-    status: {
-      type: String,
-      enum: ["Lost", "Pending", "Enrolled"],
-      default: "Lost",
-    },
+    },   
   },
   { timestamps: true },
 );

@@ -125,7 +125,7 @@ export async function getLeadEnrollments(mobile: string) {
   };
 }
 
-export async function enrollCourse(prev: any, formData: FormData) {
+export async function enrollCourse(prev: unknown, formData: FormData) {
   await connectDb();
 
   let mobile = formData.get("mobile") as string;
@@ -150,14 +150,18 @@ export async function enrollCourse(prev: any, formData: FormData) {
 
   // check duplicate enrollment
   const already = lead.enrollments.some(
-    (e) => e.course.toString() === course._id.toString(),
+    (e) => e.course?.toString() === course._id.toString(),
   );
 
   if (already) {
     return { success: false, message: "Already enrolled in this course" };
   }
 
-  lead.status = "Pending";
+ lead.enrollments.push({   
+   location,
+   remark,
+   status: "Pending",
+ });
 
   lead.email = email;
 
@@ -165,6 +169,7 @@ export async function enrollCourse(prev: any, formData: FormData) {
   course.students.push(lead._id);
 
   await lead.save();
+  // await course.save();
 
   return {
     success: true,
@@ -267,9 +272,12 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
       };
     }
 
-    const already = lead.enrollments.some(
-      (e) => e.course.toString() === course._id.toString(),
-    );
+  const already = lead.enrollments.some(
+    (e) =>
+      e.course &&
+      e.course.toString() === course._id.toString() &&
+      e.status === "Enrolled",
+  );
 
     if (already) {
       return {
@@ -294,9 +302,8 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
       location,
       remark,
       enrolledAt: new Date(),
-    });
-
-    lead.status = "Enrolled";
+      status: "Enrolled",
+    });    
 
     course.students.push(lead._id);
 

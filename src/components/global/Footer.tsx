@@ -8,19 +8,16 @@ import {
   FaPhoneAlt,
   FaEnvelope,
   FaMapMarkerAlt,
-  // FaCheck,
-  FaWhatsapp,
 } from "react-icons/fa";
 
 import WhatsappFooter from "@/components/SvgIcon/Whatsapp";
 import { IoLogoInstagram } from "react-icons/io";
-// import LogoWhite from "../SvgIcon/LogoWhite";
 
 const quickLinks = [
   { label: "» Home", href: "/" },
   { label: "» About Us", href: "#about" },
   { label: "» Our Sucess", href: "#sucess" },
-  { label: "» WhyUS", href: "#whyus" },
+  { label: "» Why us", href: "#whyus" },
   { label: "» Pricing", href: "#pricing" },
 ];
 
@@ -92,7 +89,7 @@ export default function Footer() {
                   width={1804}
                   height={599}
                   priority
-                  className="h-[3rem] md:h-[8rem] w-fit"
+                  className="h-[8rem] w-fit"
                 />
               </Link>
               <p className="mt-4 text-[16px] leading-relaxed text-white">
@@ -112,7 +109,6 @@ export default function Footer() {
               <ul className="space-y-3 text-[17px]">
                 {quickLinks.map((link) => (
                   <li key={link.label} className="flex items-center gap-2">
-                    {/* <FaCheck size={14} /> */}
                     <Link
                       href={link.href}
                       className="hover:text-defined-red  text-white"

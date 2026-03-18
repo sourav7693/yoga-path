@@ -1,11 +1,12 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import type {Swiper as SwiperType} from "swiper";
 import { useRef, useState } from "react";
-import { Autoplay } from "swiper/modules";
 import { ReelDocument } from "@/models/Reel";
 
 export default function VideoSection({reels} : {reels : ReelDocument[]}) {
+  const swiperRef = useRef<SwiperType | null>(null);
  const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
  const [playing, setPlaying] = useState<string | null>(null);
 
@@ -20,9 +21,15 @@ const togglePlay = (id: string) => {
 
   if (playing === id) {
     setPlaying(null);
+
+    // OPTIONAL: resume autoplay when paused
+    // swiperRef.current?.autoplay?.start();
   } else {
     video.play();
     setPlaying(id);
+
+    // 🔥 STOP AUTOPLAY HERE
+  (swiperRef.current as any)?.autoplay?.stop?.();  
   }
 };
 
@@ -42,11 +49,13 @@ const togglePlay = (id: string) => {
 
         {/* Swiper */}
         <Swiper
-          modules={[Autoplay]}
+          onSwiper={(swiper: SwiperType) => {
+            swiperRef.current = swiper;
+          }}
+          autoplay={false}
           spaceBetween={20}
           slidesPerView={5}
-          loop={true}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          loop={false}
           onSlideChange={() => {
             Object.values(videoRefs.current).forEach((v) => {
               if (v && !v.paused) v.pause();

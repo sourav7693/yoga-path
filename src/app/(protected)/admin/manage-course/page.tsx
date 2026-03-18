@@ -2,6 +2,7 @@ import { getAllCourses } from "@/actions/course";
 import CourseHeader from "@/components/admin/courses/CourseHeader";
 import CourseTable from "@/components/admin/courses/CourseTable";
 import Pagination from "@/components/ui/Pagination";
+import Lead from "@/models/Lead";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { MdOutlineGroups } from "react-icons/md";
@@ -32,11 +33,41 @@ const page = async ({
   const courses = coursesResult.data;
   const pagination = coursesResult.pagination;
 
+  const students = await Lead.countDocuments();
+  const now = new Date();
+
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const monthlyEnrollments = await Lead.countDocuments({
+    createdAt: {
+      $gte: startOfMonth,
+      $lt: endOfMonth,
+    },
+  });
+  const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+  const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const lastMonthEnrollments = await Lead.countDocuments({
+    createdAt: {
+      $gte: startOfLastMonth,
+      $lt: endOfLastMonth,
+    },
+  });
+
+  const growth =
+    lastMonthEnrollments === 0
+      ? 100
+      : Math.round(
+          ((monthlyEnrollments - lastMonthEnrollments) / lastMonthEnrollments) *
+            100,
+        );
+
   const cards = [
     {
       icon: <MdOutlineGroups size={25} className="text-defined-red" />,
       label: "Total Students",
-      value: "1000",
+      value: students.toString(),
     },
     {
       icon: <FaIndianRupeeSign size={25} className="text-defined-red" />,
@@ -45,8 +76,8 @@ const page = async ({
     },
     {
       icon: <BsGraphUpArrow size={25} className="text-defined-red" />,
-      label: "Avg. Enrollment",
-      value: "84%",
+      label: "Monthly Enrollment",
+      value: `${growth}%`,
     },
   ];
 

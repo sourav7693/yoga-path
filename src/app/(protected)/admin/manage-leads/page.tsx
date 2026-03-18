@@ -1,6 +1,7 @@
 import { getAllLeads } from "@/actions/leads";
 import LeadTable from "@/components/admin/leads/LeadTable";
 import Pagination from "@/components/ui/Pagination";
+import { Enrollment, LeadDocument } from "@/models/Lead";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { MdNotificationsActive, MdOutlineAccessTime } from "react-icons/md";
@@ -19,7 +20,7 @@ const page = async ({
     const pageNumber = Number(params?.page) || 1;    
     const searchQuery = params?.search || "";
     const limit = Number(params?.limit) || 10;
-    console.log("SEARCH PARAM:", params.search);
+    
    const leadsResult = await getAllLeads(
      pageNumber,
      limit,
@@ -27,32 +28,56 @@ const page = async ({
      "desc",     
      searchQuery,
    );
+   
    const leads = leadsResult.data;
    const pagination = leadsResult.pagination;
+   const now = new Date();
+   const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+   // Total Leads
+   const totalLeads = pagination.totalCount;
+
+   // New Leads (last 24h)
+ const newLeads = leads.filter((lead: LeadDocument) =>
+   lead.enrollments.some(
+     (e: Enrollment) => e.enrolledAt && new Date(e.enrolledAt) >= last24h,
+   ),
+ ).length;
+
+   // Enrolled Leads
+const enrolledLeads = leads.filter((lead : LeadDocument) =>
+  lead.enrollments.some((e : Enrollment) => e.status === "Enrolled"),
+).length;
+
+   // Pending Leads
+   const pendingLeads = leads.filter((lead: LeadDocument) =>
+     lead.enrollments.some((e : Enrollment) => e.status === "Pending"),
+   ).length;
+
   const cards = [
     {
       icon: <BsGraphUpArrow size={20} className="text-defined-red" />,
       label: "Total Leads",
-      value: "1284",
-      value2: "12% Increase",
+      value: totalLeads.toString(),
+      value2: "All Time",
     },
     {
       icon: <MdNotificationsActive size={20} className="text-defined-red" />,
       label: "New Leads",
-      value: "45",
-      value2: "Last 24h",
+      value: newLeads.toString(),
+      value2: "Recently Added",
     },
     {
       icon: <IoCheckmarkDoneCircle size={20} className="text-defined-red" />,
-      label: "Conversion Rate",
-      value: "8.4%",
-      value2: "Target 20%",
+      label: "Total Enrolled",
+      value: enrolledLeads.toString(),
+      value2: "Converted",
     },
     {
       icon: <MdOutlineAccessTime size={20} className="text-defined-red" />,
-      label: "Pending Contact",
-      value: "12",
-      value2: "Priority Items",
+      label: "Pending Leads",
+      value: pendingLeads.toString(),
+      value2: "Need Action",
     },
   ];
   return (
@@ -60,11 +85,11 @@ const page = async ({
       <div>
         <div className="flex justify-between">
           <h1 className="text-3xl font-extrabold text-defined-black">
-            Student Management
+            Lead Management
           </h1>
         </div>
         <p className="text-defined-brown">
-          Manage and track potential students for your yoga leads.
+          Manage and track potential leads for your yoga leads.
         </p>
       </div>
 
