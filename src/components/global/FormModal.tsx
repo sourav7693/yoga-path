@@ -12,6 +12,7 @@ import { useEffect, useState, useActionState, startTransition } from "react";
 import { toast } from "react-toastify";
 import { CourseDoc } from "@/models/Course";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { allowOnlyNumbers, blockNumbersInText } from "@/helper/inputHandlers";
 
 type SelectedCourse = {
   courseId: string;
@@ -384,6 +385,7 @@ useEffect(() => {
                 name="name"
                 disabled={otpMode}
                 value={formData.name}
+                onKeyDown={blockNumbersInText}
                 placeholder="Name"
                 onChange={(e) =>
                   setFormData((p) => ({ ...p, name: e.target.value }))
@@ -393,9 +395,12 @@ useEffect(() => {
               />
 
               <input
-                type="tel"
+                type="text" // Use "text" for maxLength to work reliably
+  minLength={10}
+  maxLength={10}
                 name="mobile"
                 value={formData.mobile}
+                onKeyDown={allowOnlyNumbers}
                 disabled={otpMode}
                 placeholder="Mobile Number"
                 onChange={(e) =>
@@ -410,6 +415,7 @@ useEffect(() => {
                   placeholder="Enter OTP"
                   value={otp}
                   disabled={verifyPending}
+                  onKeyDown={allowOnlyNumbers}
                   onChange={(e) => setOtp(e.target.value)}
                   className={`${inputClass} rounded-bl-[10px] rounded-br-[10px]`}
                 />

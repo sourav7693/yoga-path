@@ -54,7 +54,7 @@ export default function CourseTable({ courses }: { courses: CourseDoc[] }) {
         <table className="w-full">
           <thead className="h-16 bg-gray-200">
             <tr>
-              <th>Course</th>
+              <th className="text-left pl-4">Course</th>
               <th>Category</th>
               <th>Standard Price</th>
               <th>Offer Price</th>
@@ -71,7 +71,7 @@ export default function CourseTable({ courses }: { courses: CourseDoc[] }) {
                 key={course.courseId}
                 className="border-b border-gray-200 text-center last:border-none bg-gray-100"
               >
-                <td className="p-3 text-lg font-semibold">{course.courseName}</td>
+                <td className="p-3 text-lg font-semibold text-left">{course.courseName}</td>
 
                 <td>{course.category}</td>
 

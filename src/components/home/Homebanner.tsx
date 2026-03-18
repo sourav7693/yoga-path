@@ -11,13 +11,12 @@ import { CourseDoc } from "@/models/Course";
 export default function HomeBanner({courses} : {courses : CourseDoc[]}) {
   const [openForm, setOpenForm] = useState(false);
   return (
-    <section className="relative w-full min-h-screen md:mt-[-80px] mt-[-40px]  md:py-10 py-2 md:pt-10 pt-18">
+   <section className="relative w-full md:mt-[-80px] mt-[-40px] md:py-4 md:pt-10 pt-18">
       <Image
         src="/assets/global/homebanerbg.avif"
         alt="Banner"
         fill
-        priority
-        className="object-container"
+        priority        
       />
 
       <div className="relative w-full max-w-[1300px] mx-auto px-4 md:py-10 py-8">
