@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,  
+  reactStrictMode: true,
+  // output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -11,6 +12,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["mongoose"],
   experimental: {
     serverActions: {
       bodySizeLimit: "15mb", // allow video uploads

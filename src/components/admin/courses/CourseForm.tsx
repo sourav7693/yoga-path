@@ -226,7 +226,10 @@ export default function CourseForm({
               </div>
 
               <div className="flex flex-col gap-2 flex-1">
-                <label htmlFor="endDate" className="text-defined-black font-bold">
+                <label
+                  htmlFor="endDate"
+                  className="text-defined-black font-bold"
+                >
                   End Date
                 </label>
                 <input
@@ -304,6 +307,20 @@ export default function CourseForm({
                 />
               </div>
             </div>
+            {mode === "view" && (
+              <div className="flex flex-col gap-2 flex-1">
+                <label className="text-defined-black font-bold">
+                  Meet Link
+                </label>
+                <input
+                  type="text"
+                  name="meetLink"
+                  value={course?.meetLink || ""}
+                  readOnly
+                  className="border p-2 rounded-2xl bg-green-50 border-green-200 outline-none"
+                />
+              </div>
+            )}
 
             <div className="flex flex-col gap-2">
               <label className="text-defined-black font-bold">
