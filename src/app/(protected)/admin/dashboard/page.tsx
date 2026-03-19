@@ -87,7 +87,7 @@ const page = async () => {
         ))}
       </div>
 
-      <div className="flex flex-col items-center justify-between gap-4 text-defined-black font-bold">
+      <div className="flex items-center justify-between gap-4 text-defined-black font-bold">
         <div className="bg-gray-200 gap-2 flex flex-col flex-1 rounded-xl p-4 w-full">
           <div className="flex justify-between">
             <p>Recent Courses</p>

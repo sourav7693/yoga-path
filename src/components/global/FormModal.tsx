@@ -13,6 +13,9 @@ import { toast } from "react-toastify";
 import { CourseDoc } from "@/models/Course";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { allowOnlyNumbers, blockNumbersInText } from "@/helper/inputHandlers";
+import { useRouter } from "next/navigation";
+
+
 
 type SelectedCourse = {
   courseId: string;
@@ -76,6 +79,7 @@ export default function FormModal({
   courses: CourseDoc[];
   mode: "modal" | "inline";
 }) {
+  const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [otpMode, setOtpMode] = useState(false);
   const [otp, setOtp] = useState("");
@@ -214,10 +218,10 @@ useEffect(() => {
 
       const res = await createPaymentOrder(null, orderFd);
 
-      if (!res.success) {
-        toast.error(res.message || "Failed to create order");
-        return;
-      }
+       if (!res.success) {
+         router.push("/payment-error?reason=order-failed");
+         return;
+       }
 
       const { order, key } = res;
 
@@ -239,7 +243,9 @@ useEffect(() => {
           const verify = await verifyRazorpaySignature(null, verifyFd);
 
           if (!verify.success) {
-            toast.error("Payment verification failed");
+            router.push(
+              `/payment-error?reason=verification-failed&paymentId=${response.razorpay_payment_id}`,
+            );
             return;
           }
 
@@ -261,18 +267,20 @@ useEffect(() => {
           const enroll = await completeEnrollment(null, enrollFd);
 
           if (enroll.success) {
-            toast.success(enroll.message || "Enrollment successful");
-            setStep(1);
-            onClose?.();
+            router.push(
+              `/thank-you?paymentId=${response.razorpay_payment_id}`,
+            );
           } else {
-            toast.error(enroll.message || "Enrollment failed");
+            router.push(
+              `/payment-error?reason=enrollment-failed&paymentId=${response.razorpay_payment_id}`,
+            );
           }
         },
 
         //ts-ignore
         modal: {
           ondismiss: () => {
-            toast.info("Payment cancelled");
+            router.push("/payment-error?reason=cancelled");
             onClose?.();
           },
         },
@@ -290,7 +298,7 @@ useEffect(() => {
       razorpay.open();
     } catch (err) {
       console.error(err);
-      toast.error("Payment failed");
+     router.push("/payment-error?reason=exception");
     }
   };
 
@@ -483,8 +491,7 @@ useEffect(() => {
 
               <input
                 type="text"
-                name="location"
-                required
+                name="location"                
                 placeholder="Location"
                 className={inputClass}
               />
@@ -498,8 +505,7 @@ useEffect(() => {
 
               <input
                 type="text"
-                name="remark"
-                required
+                name="remark"                
                 placeholder="Remark"
                 className={`${inputClass} rounded-bl-[10px] rounded-br-[10px]`}
               />

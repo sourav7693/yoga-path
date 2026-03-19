@@ -1,6 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import type {Swiper as SwiperType} from "swiper";
 import { useRef, useState } from "react";
 import { ReelDocument } from "@/models/Reel";
@@ -14,22 +15,23 @@ const togglePlay = (id: string) => {
   const video = videoRefs.current[id];
   if (!video) return;
 
-  // pause all videos
+  // Pause all videos
   Object.values(videoRefs.current).forEach((v) => {
     if (v && !v.paused) v.pause();
   });
 
   if (playing === id) {
+    video.pause();
     setPlaying(null);
 
-    // OPTIONAL: resume autoplay when paused
-    // swiperRef.current?.autoplay?.start();
+    // ✅ Resume autoplay
+    swiperRef.current?.autoplay?.start();
   } else {
     video.play();
     setPlaying(id);
 
-    // 🔥 STOP AUTOPLAY HERE
-  (swiperRef.current as any)?.autoplay?.stop?.();  
+    // ✅ Stop autoplay
+    swiperRef.current?.autoplay?.stop();
   }
 };
 
@@ -52,10 +54,14 @@ const togglePlay = (id: string) => {
           onSwiper={(swiper: SwiperType) => {
             swiperRef.current = swiper;
           }}
-          autoplay={false}
+          modules={[Autoplay]}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           spaceBetween={20}
           slidesPerView={5}
-          loop={false}
+          loop={true}
           onSlideChange={() => {
             Object.values(videoRefs.current).forEach((v) => {
               if (v && !v.paused) v.pause();
@@ -75,10 +81,21 @@ const togglePlay = (id: string) => {
               <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white">
                 {/* Video */}
                 <div className="relative aspect-[9/16] bg-black">
-                  <video
-                    loop
+                  <video                    
                     ref={(el) => {
                       videoRefs.current[reel.reelId] = el;
+                    }}
+                    onEnded={() => {
+                      setPlaying(null);
+                      swiperRef.current?.autoplay?.start();
+                    }}
+                    onTouchStart={() => {
+                      swiperRef.current?.autoplay?.stop();
+                    }}
+                    onTouchEnd={() => {
+                      if (!playing) {
+                        swiperRef.current?.autoplay?.start();
+                      }
                     }}
                     src={reel.videoUrl}
                     className="w-full h-full object-cover"
