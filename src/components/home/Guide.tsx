@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
 
 type Guide = {
   id: number;
@@ -128,7 +129,7 @@ function GuideCard({ item }: { item: Guide }) {
       <p className={`mt-2 text-sm text-justify ${item.descColor}`}>{item.desc}</p>
 
       
-      <button
+      <Link href={"/contact"}
         className="mt-6 inline-flex items-center gap-2 
 bg-[linear-gradient(90deg,#AD46FF_0%,#16A34A_100%)] 
 text-white font-medium px-5 py-2 rounded-full 
@@ -136,7 +137,7 @@ hover:opacity-90 hover:gap-3
 transition-all duration-300 shadow-md"
       >
         Contact Us →
-      </button>
+      </Link>
     </div>
   );
 }

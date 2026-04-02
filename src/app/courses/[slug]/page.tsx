@@ -237,6 +237,11 @@ const allCourses = allCoursesRes.data;
     ],
   };
 
+  const ctaSection ={
+       courseId: course.courseId,
+  courses: allCourses,
+  }
+
 
   return (
     <MainTemplates>
@@ -248,7 +253,7 @@ const allCourses = allCoursesRes.data;
       />
       <StepsSection stepsData={stepsData} />
       <BenefitsSection benefitsData={benefitsData} />
-      <CTASection />
+      <CTASection data={ctaSection} />
       {/* <CustomerStories data={storiesData} /> */}
       <FAQSection data={faqData} />
     </MainTemplates>

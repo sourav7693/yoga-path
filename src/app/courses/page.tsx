@@ -6,9 +6,9 @@ import Image from "next/image";
 import { Metadata } from "next";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export const metadata: Metadata = {
@@ -19,7 +19,9 @@ export const metadata: Metadata = {
 };
 
 const Page = async ({ searchParams }: PageProps) => {
-  const currentPage = Number(searchParams?.page || 1);
+
+  const resolvedParams = await searchParams;
+  const currentPage = Number(resolvedParams?.page || 1);
 
   const res = await getAllCourses(currentPage, 20);
   const courses = res.data;

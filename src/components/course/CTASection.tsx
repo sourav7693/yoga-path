@@ -1,6 +1,16 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
+import FormModal from "../global/FormModal";
 
-const CTASection = () => {
+export interface Props {
+
+
+  courseId: string;
+  courses: any[]
+}
+
+const CTASection = ({ data }: { data: Props }) => {
+    const [openForm, setOpenForm] = useState(false);
   return (
     <section className="w-full py-8 lg:py-16 px-4 bg-white">
       <div className="max-w-4xl mx-auto">
@@ -17,7 +27,7 @@ const CTASection = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
             
-            <button className="bg-white text-purple-600 font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition">
+            <button onClick={() => setOpenForm(true)} className="bg-white text-purple-600 font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition">
               Book Your Seat Now
             </button>
 
@@ -30,6 +40,14 @@ const CTASection = () => {
         </div>
 
       </div>
+        {openForm && (
+                    <FormModal
+                      mode="modal"
+                      onClose={() => setOpenForm(false)}
+                      courses={data.courses}
+                      defaultCourseId={data.courseId}
+                    />
+                  )}
     </section>
   );
 };
