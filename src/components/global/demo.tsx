@@ -1,6 +1,6 @@
 "use client";
 
-import AboutImgSection from "./AboutImgSection";
+import AboutImgSection from "../home/AboutImgSection";
 import Check from "../SvgIcon/Check";
 
 const AboutSection = () => {
