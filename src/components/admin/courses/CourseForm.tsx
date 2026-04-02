@@ -78,7 +78,6 @@ const [metaDescription, setMetaDescription] = useState("");
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
     message: "",
-    authRequired: false,
   });
 
   useEffect(() => {
@@ -86,13 +85,10 @@ const [metaDescription, setMetaDescription] = useState("");
     if (state.success) {
       closeModal();
       toast.success(state.message);
-    } else if (state.authRequired) {
-      toast.info("Redirecting to Google to connect Calendar...");
-      window.location.href = "/api/auth/google";
-    }else {
+    } else {
     toast.error(state.message);
   }
-  }, [state.success, state.message, state.authRequired]);
+  }, [state.success, state.message]);
 
   useEffect(() => {
     if (!course) return;
@@ -139,7 +135,9 @@ const [metaDescription, setMetaDescription] = useState("");
                 ? "View Course"
                 : "Add Course"}
           </h2>
-
+<button onClick={() => window.location.href = "/api/auth/google"}>
+  Connect Google Calendar
+</button>
           <button
             onClick={closeModal}
             className="text-gray-500 hover:text-black text-xl"

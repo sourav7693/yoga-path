@@ -100,9 +100,11 @@ if (!tokenDoc) {
   return {
     success: false,
     message: "Please connect your Google Calendar account first",
-    authRequired: true,
+  
   };
 }
+
+console.log("TOKEN:", tokenDoc);
 
 const auth = await getAuthClient(); // await যোগ করো
 if (!auth) {

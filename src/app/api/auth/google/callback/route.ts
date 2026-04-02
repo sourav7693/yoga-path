@@ -4,6 +4,7 @@ import { connectDb } from "@/lib/connection";
 import { GoogleToken } from "@/models/GoogleToken";
 
 export async function GET(request: Request) {
+   console.log("GOOGLE AUTH API HIT 🔥"); 
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "No code provided" }, { status: 400 });
   }
 
-  const oAuth2Client = await getAuthClient(); // ✅ await
+  const oAuth2Client = await getAuthClient();
 
   if (!oAuth2Client) {
     return NextResponse.json(
@@ -23,6 +24,8 @@ export async function GET(request: Request) {
   try {
     const { tokens } = await oAuth2Client.getToken(code);
     oAuth2Client.setCredentials(tokens);
+
+    console.log("TOKENS:", tokens);
 
  
     await connectDb();
