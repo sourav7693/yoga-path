@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       scope: tokens.scope,
     });
 
-    return NextResponse.redirect(new URL("/admin/manage-course", request.url));
+    return NextResponse.redirect("https://theyogapath.in/admin/manage-course");
   } catch (error) {
     console.error("Error retrieving access token", error);
     return NextResponse.json(
