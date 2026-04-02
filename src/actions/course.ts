@@ -9,6 +9,7 @@ import { generateSlug } from "@/helper/generateSlug";
 import { revalidatePath } from "next/cache";
 import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
 import fsSync from "fs";
+import { GoogleToken } from "@/models/GoogleToken";
 
 export async function createCourse(prevState: unknown, formData: FormData) {
   await connectDb();
@@ -94,18 +95,19 @@ if (faqsRaw) {
     return { success: false, message: "Image upload failed" };
   }  
 
-  if (!fsSync.existsSync(TOKEN_PATH)) {
-    return {
-      success: false,
-      message: "Please connect your Google Calendar account first",
-      authRequired: true,
-    };
-  }
+const tokenDoc = await GoogleToken.findOne({});
+if (!tokenDoc) {
+  return {
+    success: false,
+    message: "Please connect your Google Calendar account first",
+    authRequired: true,
+  };
+}
 
-  const auth = getAuthClient();
-  if (!auth) {
-    return { success: false, message: "Google Calendar not configured" };
-  }
+const auth = await getAuthClient(); // await যোগ করো
+if (!auth) {
+  return { success: false, message: "Google Calendar not configured" };
+}
 
   const event = await calendar.events.insert({
     calendarId: "primary",
@@ -364,18 +366,18 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
     const meetingDurationChanged =
       newMeetingDuration !== course.meetingDuration;
 
-    if (!fsSync.existsSync(TOKEN_PATH)) {
-      return {
-        success: false,
-        message: "Please connect your Google Calendar account first",
-        authRequired: true,
-      };
-    }
-
-    const auth = getAuthClient();
-    if (!auth) {
-      return { success: false, message: "Google Calendar not configured" };
-    }
+const tokenDoc = await GoogleToken.findOne({});
+if (!tokenDoc) {
+  return {
+    success: false,
+    message: "Please connect your Google Calendar account first",
+    authRequired: true,
+  };
+}
+const auth = await getAuthClient();
+if (!auth) {
+  return { success: false, message: "Google Calendar not configured" };
+}
 
     if (!course.googleEventId || !course.meetLink) {
       const event = await calendar.events.insert({

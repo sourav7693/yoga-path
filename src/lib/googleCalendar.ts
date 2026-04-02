@@ -1,12 +1,14 @@
 import path from "path";
 import { google } from "googleapis";
-import fs from "fs";
+import { connectDb } from "@/lib/connection";
+import { GoogleToken } from "@/models/GoogleToken";
 
+// TOKEN_PATH রেখে দাও — পুরনো references break হবে না
 const TOKEN_PATH = path.join(process.cwd(), "google-tokens.json");
 
 let oAuth2Client: any = null;
 
-const getAuthClient = () => {
+const getAuthClient = async () => {  // async করতে হবে
   if (!oAuth2Client) {
     try {
       const client_id = process.env.GOOGLE_CLIENT_ID;
@@ -28,27 +30,29 @@ const getAuthClient = () => {
     }
   }
 
-  // Always reload token from disk if it exists to avoid stale memory state
-  if (fs.existsSync(TOKEN_PATH)) {
-    try {
-      const token = fs.readFileSync(TOKEN_PATH, "utf8");
-      oAuth2Client.setCredentials(JSON.parse(token));
-    } catch (error) {
-      console.error("Error loading Google tokens:", error);
+  // ✅ File এর বদলে DB থেকে token load করো
+  try {
+    await connectDb();
+    const tokenDoc = await GoogleToken.findOne({});
+    if (tokenDoc) {
+      oAuth2Client.setCredentials({
+        access_token: tokenDoc.access_token,
+        refresh_token: tokenDoc.refresh_token,
+        expiry_date: tokenDoc.expiry_date,
+        token_type: tokenDoc.token_type,
+      });
     }
+  } catch (error) {
+    console.error("Error loading Google tokens from DB:", error);
   }
 
   return oAuth2Client;
 };
 
-const calendar = google.calendar({
-  version: "v3",
-  auth: oAuth2Client, // This will be updated by setCredentials in getAuthClient
-});
+const calendar = google.calendar({ version: "v3" });
 
 export { oAuth2Client, TOKEN_PATH, getAuthClient };
 
-// Initialize the client on module load if credentials exist
-getAuthClient();
+getAuthClient(); // এটা এখন async, but module load এ fire-and-forget ঠিকই আছে
 
 export default calendar;

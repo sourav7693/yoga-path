@@ -312,7 +312,7 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
 
     if (course.googleEventId) {
       try {
-        const auth = getAuthClient();
+        const auth = await getAuthClient();
         const event = await calendar.events.get({
           calendarId: "primary",
           eventId: course.googleEventId,
