@@ -21,7 +21,7 @@ const OurSucessStory = dynamic(
   () => import("@/components/home/OurSucessStory"),
   {
     loading: () => <p className="text-center py-10">Loading success stories...</p>,
-    ssr: false, 
+   
   }
 );
 
