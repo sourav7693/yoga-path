@@ -104,9 +104,9 @@ if (!tokenDoc) {
   };
 }
 
-console.log("TOKEN:", tokenDoc);
 
-const auth = await getAuthClient(); // await যোগ করো
+
+const auth = await getAuthClient(); 
 if (!auth) {
   return { success: false, message: "Google Calendar not configured" };
 }

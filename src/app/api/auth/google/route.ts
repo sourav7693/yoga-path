@@ -4,7 +4,6 @@ import { getAuthClient } from "@/lib/googleCalendar";
 const SCOPES = ["https://www.googleapis.com/auth/calendar.events"];
 
 export async function GET() {
-   console.log("GOOGLE AUTH API HIT 🔥"); 
   const oAuth2Client = await getAuthClient(); 
   
 
@@ -21,7 +20,6 @@ export async function GET() {
     scope: ["https://www.googleapis.com/auth/calendar.events"] 
   });
 
-  console.log("AUTH URL:", authUrl);
 
   return NextResponse.redirect(authUrl);
 }

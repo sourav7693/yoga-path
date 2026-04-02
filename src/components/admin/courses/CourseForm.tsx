@@ -31,9 +31,21 @@ export default function CourseForm({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [metaTitle, setMetaTitle] = useState("");
-const [metaDescription, setMetaDescription] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
 
   const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
+
+  const [isGoogleConnected, setIsGoogleConnected] = useState(false);
+
+  useEffect(() => {
+    const checkGoogle = async () => {
+      const res = await fetch("/api/google/status");
+      const data = await res.json();
+      setIsGoogleConnected(data.connected);
+    };
+
+    checkGoogle();
+  }, []);
 
   const addFaq = () => {
     setFaqs([...faqs, { question: "", answer: "" }]);
@@ -86,8 +98,8 @@ const [metaDescription, setMetaDescription] = useState("");
       closeModal();
       toast.success(state.message);
     } else {
-    toast.error(state.message);
-  }
+      toast.error(state.message);
+    }
   }, [state.success, state.message]);
 
   useEffect(() => {
@@ -95,9 +107,9 @@ const [metaDescription, setMetaDescription] = useState("");
 
     setMrp(course.courseMRP || 0);
     setDiscount(course.discount || 0);
-      setMetaTitle(course.metaTitle || "");
-  setMetaDescription(course.metaDescription || "");
-    
+    setMetaTitle(course.metaTitle || "");
+    setMetaDescription(course.metaDescription || "");
+
     setDuration(course.days || "1month");
     setStartDate(
       course.startDate
@@ -135,9 +147,14 @@ const [metaDescription, setMetaDescription] = useState("");
                 ? "View Course"
                 : "Add Course"}
           </h2>
-<button onClick={() => window.location.href = "/api/auth/google"}>
-  Connect Google Calendar
-</button>
+          {!isGoogleConnected && (
+            <button
+              onClick={() => (window.location.href = "/api/auth/google")}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md animate-pulse hover:scale-105 transition-all"
+            >
+              🔗 Connect Google Calendar
+            </button>
+          )}
           <button
             onClick={closeModal}
             className="text-gray-500 hover:text-black text-xl"
@@ -151,32 +168,32 @@ const [metaDescription, setMetaDescription] = useState("");
           <fieldset disabled={mode === "view"} className="flex flex-col gap-4">
             <input type="hidden" name="courseId" value={course?.courseId} />
             <div className="flex flex-col gap-2">
-  <label className="text-defined-black font-bold">
-    Meta Title (SEO)
-  </label>
-  <input
-    name="metaTitle"
-      value={metaTitle}
-  onChange={(e) => setMetaTitle(e.target.value)}
-     maxLength={60}
-    placeholder="SEO Title for Google"
-    className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none"
-  />
-</div>
+              <label className="text-defined-black font-bold">
+                Meta Title (SEO)
+              </label>
+              <input
+                name="metaTitle"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                maxLength={60}
+                placeholder="SEO Title for Google"
+                className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none"
+              />
+            </div>
 
-<div className="flex flex-col gap-2">
-  <label className="text-defined-black font-bold">
-    Meta Description (SEO)
-  </label>
-  <textarea
-    name="metaDescription"
-      value={metaDescription}
-  onChange={(e) => setMetaDescription(e.target.value)}
-     maxLength={160}
-    placeholder="Short description for search engines..."
-    className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none min-h-20"
-  />
-</div>
+            <div className="flex flex-col gap-2">
+              <label className="text-defined-black font-bold">
+                Meta Description (SEO)
+              </label>
+              <textarea
+                name="metaDescription"
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                maxLength={160}
+                placeholder="Short description for search engines..."
+                className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none min-h-20"
+              />
+            </div>
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="courseName"

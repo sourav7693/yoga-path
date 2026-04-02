@@ -4,7 +4,7 @@ import { connectDb } from "@/lib/connection";
 import { GoogleToken } from "@/models/GoogleToken";
 
 export async function GET(request: Request) {
-   console.log("GOOGLE AUTH API HIT 🔥"); 
+  
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
 
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     const { tokens } = await oAuth2Client.getToken(code);
     oAuth2Client.setCredentials(tokens);
 
-    console.log("TOKENS:", tokens);
+    
 
  
     await connectDb();
