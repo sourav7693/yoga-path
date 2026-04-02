@@ -1,7 +1,6 @@
 import AboutSection from "@/components/home/AboutSection";
 import HomeBanner from "@/components/home/Homebanner";
 import MainTemplates from "@/templates/MainTemplates";
-import  OurSucessStory from "@/components/home/OurSucessStory"
 // import WhyChoose from "@/components/home/WhyChose";
 import PrisingSection from "@/components/home/PricisingSection"
 // import Testimonial from "@/components/home/Testimonial"
@@ -16,6 +15,15 @@ import ImgContent from "@/components/home/ImgContent";
 import MediationApp from "@/components/home/MediationApp";
 import GallerySection from "@/components/gallery/GallerySection";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const OurSucessStory = dynamic(
+  () => import("@/components/home/OurSucessStory"),
+  {
+    loading: () => <p className="text-center py-10">Loading success stories...</p>,
+    ssr: false, 
+  }
+);
 
 
 
