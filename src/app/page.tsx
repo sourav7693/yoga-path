@@ -38,7 +38,7 @@ export default async function Home() {
        <YogaCourses courses={courses} />
       <Guide/>
       <SignatureOffering/>
-      <Highlights/>
+      <Highlights courses={courses}/>
       <Features/>
        <ImgContent/>
        <MediationApp/>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
 export default function ImgContent() {
@@ -38,13 +39,13 @@ export default function ImgContent() {
           </p>
 
  
-          <button
+          <Link href={"/contact"}
             className="mt-6 inline-flex items-center gap-2 
             bg-white text-defined-green px-6 py-3 rounded-full font-medium 
             hover:gap-3 transition-all duration-300 w-fit shadow-md"
           >
             Contact Us <FiArrowRight />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -15,7 +15,7 @@ export default function TransparentHeader() {
         <div className="flex items-center justify-between md:h-[70px] h-[50px]">
           
           {/* Logo */}
-          <div className="flex items-center mt-6 md:mt-[70px]">
+          <div className="flex items-center mt-10 md:mt-[70px]">
             <Link href="/">
               <Image
                 src={"/assets/logo/Yoga Path Logo PNG.png"}
@@ -23,7 +23,7 @@ export default function TransparentHeader() {
                 width={1804}
                 height={299}
                 priority
-                className="h-[3rem] md:h-[7rem] w-fit"
+                className="h-[5rem] md:h-[7rem] xl:h-[9rem] w-fit"
               />
             </Link>
           </div>

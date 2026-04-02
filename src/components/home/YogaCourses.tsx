@@ -28,7 +28,7 @@ const YogaCourses = ({ courses }: { courses: CourseDoc[] }) => {
 
             <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
-            <h3 className="absolute bottom-4 left-4 text-white text-xl font-semibold">
+            <h3 className="absolute bottom-4 left-4 text-white text-base font-semibold">
               {course.courseName}
             </h3>
           </Link>

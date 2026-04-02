@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
 export default function SignatureOffering() {
@@ -27,13 +28,13 @@ export default function SignatureOffering() {
 
   
           <div className="mt-6">
-            <button className="inline-flex items-center gap-2 
+            <Link href={"/courses"} className="inline-flex items-center gap-2 
               bg-defined-purple 
               text-white px-6 py-3 rounded-full 
               font-medium shadow-md 
               hover:gap-3 transition-all duration-300">
               Explore More <FiArrowRight />
-            </button>
+            </Link>
           </div>
         </div>
 

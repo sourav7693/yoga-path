@@ -348,7 +348,7 @@ export default function FormModal({
               <IoMdArrowRoundBack className="text-xl hover:scale-110 transition" />
             </button>
           )}
-          Lets Talk to Our Counsellors
+          Lets Talk To Our Fitness Experts
         </h3>
 
         {/* Step Indicator */}

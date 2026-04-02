@@ -123,6 +123,7 @@ const allCourses = allCoursesRes.data;
     title: course.courseName,
     description: course.description,
       courseId: course.courseId,
+      offerPrice:course.offerPrice,
   courses: allCourses,
     whoJoin: [
       {
@@ -236,35 +237,6 @@ const allCourses = allCoursesRes.data;
     ],
   };
 
-  const storiesData = {
-    heading: "Stories of Balance",
-    stories: [
-      {
-        name: "Priya S.",
-        role: "Working Professional",
-        message:
-          "The evening batch has become my sanctuary after a stressful day of meetings. My back pain is gone!",
-      },
-      {
-        name: "Arjun K.",
-        role: "Business Owner",
-        message:
-          "I was skeptical about online yoga, but the instructors are so attentive. It feels like they are right in the room.",
-      },
-      {
-        name: "Sunita R.",
-        role: "Homemaker",
-        message:
-          "The breathing exercises helped with my anxiety tremendously. I sleep like a baby now.",
-      },
-      {
-        name: "Rahul M.",
-        role: "Engineer",
-        message:
-          "Super flexible timing and amazing instructors. Highly recommended!",
-      },
-    ],
-  };
 
   return (
     <MainTemplates>
@@ -277,7 +249,7 @@ const allCourses = allCoursesRes.data;
       <StepsSection stepsData={stepsData} />
       <BenefitsSection benefitsData={benefitsData} />
       <CTASection />
-      <CustomerStories data={storiesData} />
+      {/* <CustomerStories data={storiesData} /> */}
       <FAQSection data={faqData} />
     </MainTemplates>
   );

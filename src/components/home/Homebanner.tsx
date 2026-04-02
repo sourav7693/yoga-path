@@ -1,62 +1,75 @@
 "use client";
 
-import { useState } from "react";
-import InfoCard from "./InfoCard";
 import FormModal from "../global/FormModal";
 import { CourseDoc } from "@/models/Course";
 
 export default function HomeBanner({ courses }: { courses: CourseDoc[] }) {
-  const [openForm, setOpenForm] = useState(false);
-
   return (
-    <section className="relative w-full md:mt-[-80px] mt-[-40px] md:py-4 md:pt-10 pt-18 overflow-hidden">
-
-      {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover"
-      >
-        <source src="/assets/new-img/theyogapath-herovideo.mp4" type="video/mp4" />
-      </video>
-
-      {/* Dark Overlay (optional but recommended) */}
-      <div className="absolute inset-0 bg-black/40"></div>
-
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-[1300px] mx-auto px-4 md:py-10 py-8">
+    <>
+      {/* =========================================
+          DESKTOP & TABLET VERSION 
+          (মোবাইলে হাইড থাকবে, শুধু ট্যাব ও ডেস্কটপে দেখাবে)
+      ========================================= */}
+      <section className="hidden md:block relative w-full mt-[-80px] bg-transparent overflow-hidden">
         
-        {/* 2 Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center md:pt-35">
+        {/* Full Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          >
+            <source src="/assets/new-img/theyogapath-herovideo.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black/20"></div>
           
-          {/* LEFT SIDE (Empty / or future content) */}
-          <div></div>
+        </div>
 
-          {/* RIGHT SIDE FORM */}
-          <div className="flex justify-center md:justify-end w-full">
-            <div className="w-full max-w-[400px]">
-              <FormModal mode="inline" courses={courses} />
+        {/* Desktop Content */}
+        <div className="relative z-10 w-full max-w-[1300px] mx-auto px-4 pt-40 pb-20">
+          <div className="grid grid-cols-2 gap-10 items-center">
+            {/* Left Side (ফাঁকা) */}
+            <div></div>
+
+            {/* Right Side Form */}
+            <div className="flex justify-end w-full">
+              <div className="w-full max-w-[400px]">
+                <FormModal mode="inline" courses={courses} />
+              </div>
             </div>
           </div>
-
         </div>
-      </div>
+      </section>
 
-      {/* Bottom Info Card */}
-      {/* <div className="relative z-20">
-        <InfoCard />
-      </div> */}
+      {/* =========================================
+          MOBILE VERSION 
+          (শুধু মোবাইলে দেখাবে, ট্যাব ও ডেস্কটপে হাইড থাকবে)
+      ========================================= */}
+      <section className="block md:hidden relative w-full mt-[-40px] bg-linear-to-br from-defined-blue/20 to-defined-blue/60 overflow-hidden flex flex-col">
+        
+        {/* Mobile Top Video Banner */}
+        <div className="relative w-full h-[60vh] z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          >
+            <source src="/assets/new-img/theyogapath-herovideo.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black/20"></div>
+        </div>
 
-      {/* Modal */}
-      {openForm && (
-        <FormModal
-          mode="modal"
-          onClose={() => setOpenForm(false)}
-          courses={courses}
-        />
-      )}
-    </section>
+        {/* Mobile Bottom Form Area */}
+        <div className="relative z-10 w-full px-4 py-10 flex justify-center">
+          <div className="w-full max-w-[400px]">
+            <FormModal mode="inline" courses={courses} />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

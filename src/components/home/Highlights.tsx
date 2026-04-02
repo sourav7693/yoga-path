@@ -1,9 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
+import FormModal from "../global/FormModal";
+import { CourseDoc } from "@/models/Course";
 
-export default function Highlights() {
+export default function Highlights({ courses }: { courses: CourseDoc[] }) {
+   const [openForm, setOpenForm] = useState(false);
   return (
     <section className="w-full py-16 px-4 bg-white">
       <div className="max-w-[1320px] mx-auto grid lg:grid-cols-3 gap-6">
@@ -24,9 +29,9 @@ export default function Highlights() {
               Improve flexibility and mental clarity with expert sessions.
             </p>
 
-            <button className="mt-4 inline-flex items-center gap-2 hover:gap-3 transition-all">
+            <Link href={"/courses"} className="mt-4 inline-flex items-center gap-2 hover:gap-3 transition-all">
               Explore More <FiArrowRight />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -46,9 +51,9 @@ export default function Highlights() {
               Find inner peace through guided meditation practices.
             </p>
 
-            <button className="mt-4 inline-flex items-center gap-2 hover:gap-3 transition-all">
+            <Link href={"/courses"} className="mt-4 inline-flex items-center gap-2 hover:gap-3 transition-all">
               Explore More <FiArrowRight />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -59,20 +64,28 @@ export default function Highlights() {
           </h2>
 
           <p className="mt-4 text-gray-600 leading-relaxed text-justify">
-            Yoga is more than just physical exercise—it is a path to complete transformation. At The Yoga Path, we help individuals reconnect with their inner selves, reduce stress, and improve overall well-being through guided practices. With consistent learning and expert mentorship, you can experience greater clarity, emotional balance, and inner peace, empowering you to live a healthier, more mindful, and fulfilling life every day.
+           Yoga is more than just physical exercise—it is a powerful path to complete transformation of mind, body, and soul. At The Yoga Path, we guide individuals to reconnect with their inner selves, reduce stress, and enhance overall well-being through structured and mindful practices. Our expert-led sessions help improve flexibility, strength, and mental clarity while promoting emotional balance and inner peace. With consistent practice and proper guidance, you can develop a deeper sense of awareness and positivity. Embrace this journey to lead a healthier, more mindful, and fulfilling life every single day.
           </p>
 
         
-          <button className="mt-6 inline-flex items-center gap-2 
+          <button onClick={() => setOpenForm(true)} className="mt-6 inline-flex items-center gap-2 
             bg-defined-purple 
             text-white px-6 py-3 rounded-full font-medium 
             hover:gap-3 transition-all duration-300 shadow-md w-fit">
-            Contact Us <FiArrowRight />
+            Enroll Now <FiArrowRight />
           </button>
 
         </div>
 
       </div>
+
+        {openForm && (
+                    <FormModal
+                      mode="modal"
+                      onClose={() => setOpenForm(false)}
+                      courses={courses}
+                    />
+                  )}
     </section>
   );
 }

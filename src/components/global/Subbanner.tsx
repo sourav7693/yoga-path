@@ -13,7 +13,7 @@ const Subbanner: React.FC<SubbannerProps> = ({ heading }) => {
       <div className="w-full  relative mt-[-32px] md:mt-[-80px]">
         
         {/* Banner Image */}
-        <div className="w-full h-[8rem] lg:h-[10vmax] xl:h-[15rem]  overflow-hidden">
+        <div className="w-full h-[8rem] lg:h-[14vmax] xl:h-[16rem]  ">
           <Image
             src="/assets/global/subbanner.jpg (1).jpeg"
             alt="Sub Banner"
