@@ -56,7 +56,7 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
           <div className="flex items-center gap-3">
             <div className="flex items-center">
               <span className="text-5xl font-bold text-defined-red pt-4">
-                ₹599
+                ₹799
               </span>
             </div>
 
@@ -79,7 +79,7 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
             onClick={() => setOpenForm(true)}
             className="animated-glow-btn text-xl"
           >
-            REGISTER NOW AT ₹599/- ONLY
+            REGISTER NOW AT ₹799/- ONLY
           </button>
         </div>
       </div>

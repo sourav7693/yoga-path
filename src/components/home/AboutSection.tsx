@@ -50,7 +50,7 @@ export default function AboutSection() {
             inner self. This one-month course focuses on simple yet powerful
             techniques that improve flexibility, reduce stress, and build a
             strong foundation for holistic well-being—all at an affordable fee
-            of ₹599 per month.
+            of ₹799 per month.
           </p>
 
           <p className="mt-4 text-gray-600 leading-relaxed text-sm md:text-[15px] text-justify">
