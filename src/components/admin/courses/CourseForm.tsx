@@ -82,14 +82,17 @@ const [metaDescription, setMetaDescription] = useState("");
   });
 
   useEffect(() => {
+    if (!state.message) return;
     if (state.success) {
       closeModal();
       toast.success(state.message);
     } else if (state.authRequired) {
       toast.info("Redirecting to Google to connect Calendar...");
       window.location.href = "/api/auth/google";
-    }
-  }, [state.success, state.message, state.authRequired, closeModal]);
+    }else {
+    toast.error(state.message);
+  }
+  }, [state.success, state.message, state.authRequired]);
 
   useEffect(() => {
     if (!course) return;

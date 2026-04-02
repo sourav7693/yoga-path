@@ -49,18 +49,7 @@ if (faqsRaw) {
   }
 }
 
-if (faqs.length > 0) {
-  const isValid = faqs.every(
-    (f: any) => f.question?.trim() && f.answer?.trim()
-  );
 
-  if (!isValid) {
-    return {
-      success: false,
-      message: "Each FAQ must have question and answer",
-    };
-  }
-}
 
 
   if (
@@ -75,7 +64,7 @@ if (faqs.length > 0) {
     !endDate ||
     !meetingDuration ||
     !courseMRP ||
-    !discount ||
+    discount == null || isNaN(discount) ||
     !thumbnail
   ) {
     return { success: false, message: "All fields are required" };
