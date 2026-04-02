@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { getAuthClient, TOKEN_PATH } from "@/lib/googleCalendar";
-import fs from "fs";
+import { getAuthClient } from "@/lib/googleCalendar";
+import { connectDb } from "@/lib/connection";
+import { GoogleToken } from "@/models/GoogleToken";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "No code provided" }, { status: 400 });
   }
 
-  const oAuth2Client = getAuthClient();
+  const oAuth2Client = await getAuthClient(); // ✅ await
 
   if (!oAuth2Client) {
     return NextResponse.json(
@@ -23,10 +24,17 @@ export async function GET(request: Request) {
     const { tokens } = await oAuth2Client.getToken(code);
     oAuth2Client.setCredentials(tokens);
 
-    // Save tokens locally so they persist across server restarts
-    fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+ 
+    await connectDb();
+    await GoogleToken.deleteMany({});
+    await GoogleToken.create({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      expiry_date: tokens.expiry_date,
+      token_type: tokens.token_type,
+      scope: tokens.scope,
+    });
 
-    // Redirect the user back to the course management page
     return NextResponse.redirect(new URL("/admin/manage-course", request.url));
   } catch (error) {
     console.error("Error retrieving access token", error);
