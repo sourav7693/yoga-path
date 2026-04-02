@@ -39,7 +39,7 @@ export default function CourseForm({
 
   useEffect(() => {
     const checkGoogle = async () => {
-      const res = await fetch("/api/google/status");
+      const res = await fetch("/api/auth/google/status");
       const data = await res.json();
       setIsGoogleConnected(data.connected);
     };
