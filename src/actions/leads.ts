@@ -8,7 +8,7 @@ import axios from "axios";
 import { Course } from "@/models/Course";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import calendar, {  getAuthClient } from "@/lib/googleCalendar";
 import fs from "fs";
 
 

@@ -7,7 +7,7 @@ import { connectDb } from "@/lib/connection";
 import { Course, FAQItem } from "@/models/Course";
 import { generateSlug } from "@/helper/generateSlug";
 import { revalidatePath } from "next/cache";
-import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import calendar, {  getAuthClient } from "@/lib/googleCalendar";
 import fsSync from "fs";
 import { GoogleToken } from "@/models/GoogleToken";
 

@@ -1,14 +1,10 @@
-import path from "path";
 import { google } from "googleapis";
 import { connectDb } from "@/lib/connection";
 import { GoogleToken } from "@/models/GoogleToken";
 
-// TOKEN_PATH রেখে দাও — পুরনো references break হবে না
-const TOKEN_PATH = path.join(process.cwd(), "google-tokens.json");
-
 let oAuth2Client: any = null;
 
-const getAuthClient = async () => {  // async করতে হবে
+const getAuthClient = async () => {
   if (!oAuth2Client) {
     try {
       const client_id = process.env.GOOGLE_CLIENT_ID;
@@ -30,7 +26,6 @@ const getAuthClient = async () => {  // async করতে হবে
     }
   }
 
-  // ✅ File এর বদলে DB থেকে token load করো
   try {
     await connectDb();
     const tokenDoc = await GoogleToken.findOne({});
@@ -51,8 +46,5 @@ const getAuthClient = async () => {  // async করতে হবে
 
 const calendar = google.calendar({ version: "v3" });
 
-export { oAuth2Client, TOKEN_PATH, getAuthClient };
-
-getAuthClient(); // এটা এখন async, but module load এ fire-and-forget ঠিকই আছে
-
+export { oAuth2Client, getAuthClient };
 export default calendar;
