@@ -36,7 +36,7 @@ const YogaCourses = ({ courses }: { courses: CourseDoc[] }) => {
               </h3>
 
               <p className="text-[#003D5D] text-sm leading-relaxed">
-                {course.description?.length > 120
+                {course.description && course.description?.length > 120
                   ? course.description.slice(0, 120) + "..."
                   : course.description}
               </p>
