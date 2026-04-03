@@ -43,13 +43,13 @@ export default function LeadTable({ leads }: { leads: LeadDocument[] }) {
         </thead>
 
         <tbody>
-          {rows.map(({ lead, enroll }) => (
+          {rows.map(({ lead, enroll }, index) => (
             <tr
-              key={`${lead.leadId}-${enroll?.course?.courseId || "no-course"}`}
-              className="border-b border-gray-200 text-center bg-gray-100"
+              key={enroll?._id || `${lead.leadId}-${index}`}
+              className="border-b border-gray-200 text-left bg-gray-100 font-medium"
             >
               <td className="p-3 font-semibold">{lead.leadId}</td>
-              <td>{lead.name}</td>
+              <td className="text-left">{lead.name}</td>
               <td>{lead.mobile}</td>
               <td>{lead.email || "-"}</td>
 

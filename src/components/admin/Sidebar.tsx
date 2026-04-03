@@ -29,13 +29,13 @@ export default function Sidebar() {
     },
     {
       icon: <FaImages size={20} />,
-      label: "Media Library",
+      label: "Reels",
       href: "/admin/reel",
     },
     {
       icon: <BsFillBarChartLineFill size={20} />,
-      label: "Analytics",
-      href: "/admin/dashboard",
+      label: "Gallery",
+      href: "/admin/gallery",
     }, 
   ];
 
