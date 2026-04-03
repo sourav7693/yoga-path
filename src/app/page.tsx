@@ -10,7 +10,7 @@ import YogaCourses from "@/components/home/YogaCourses";
 import { getReels } from "@/actions/reel";
 
 export default async function Home() {
-  const [courseResult, reelsResult] = await Promise.all([getAllCourses(1,6), getReels(1,0)]);  
+  const [courseResult, reelsResult] = await Promise.all([getAllCourses(1,0), getReels(1,0)]);  
   const courses = courseResult.data;
   const reels = reelsResult.data;
   return (

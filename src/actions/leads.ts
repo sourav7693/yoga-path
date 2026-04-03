@@ -365,11 +365,11 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     await lead.save();
     await course.save();
 
-    // console.log("WA variables", [
-    //   sessionTime,
-    //   course.meetingDuration?.toString() || "",
-    //   meetingLink,
-    // ]);
+    console.log("WA variables", [
+      sessionTime,
+      course.meetingDuration?.toString() || "",
+      meetingLink,
+    ]);
 
     const payload = {
       "auth-key": process.env.WA_AUTH_KEY,
@@ -381,9 +381,16 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
       variables: [sessionTime,  course.meetingDuration?.toString() || "", meetingLink],
     };
 
-   axios
-     .post("https://web.wabridge.com/api/createmessage", payload)
-     .catch((err) => console.error("Whatsapp send failed", err));
+ try {
+   const res = await axios.post(
+     "https://web.wabridge.com/api/createmessage",
+     payload,
+   );
+
+   console.log("WA success:", res.data);
+ } catch (err: any) {
+   console.error("Whatsapp send failed:", err?.response?.data || err.message);
+ }
 
     return {
       success: true,
