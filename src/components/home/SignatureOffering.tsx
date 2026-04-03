@@ -14,7 +14,7 @@ export default function SignatureOffering() {
           
       
           <div>
-            <h2 className="text-3xl md:text-2xl font-normal leading-snug">
+            <h2 className="text-3xl md:text-2xl font-bold leading-snug">
              Explore Our Holistic {" "}
               <span className="text-[#AD46FF] text-3xl md:text-3xl"> Yoga and Healing Programs</span>
             </h2>

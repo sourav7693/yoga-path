@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AboutSection() {
   return (
@@ -9,7 +10,7 @@ export default function AboutSection() {
         {/* LEFT IMAGE SECTION */}
         <div className="relative flex justify-center lg:justify-start">
           {/* BIG IMAGE */}
-          <div className="relative w-[300px]  md:w-[600px] h-[600px] rounded-3xl overflow-hidden shadow-lg">
+          <div className="relative w-[340px]  md:w-[600px] h-[600px] rounded-3xl overflow-hidden ">
             <Image
               src="/assets/new-img/about2.jpg"
               alt="Yoga Training"
@@ -19,9 +20,9 @@ export default function AboutSection() {
           </div>
 
           {/* SMALL OVERLAP IMAGE */}
-          <div className="absolute bottom-[-30px] right-[-10px]  w-[300px]  h-[350px] rounded-3xl overflow-hidden  border-8 border-white">
+          <div className="absolute bottom-[-50px] right-[-10px]  w-[300px]  h-[350px] rounded-3xl overflow-hidden  border-8 border-white">
             <Image
-              src="/assets/new-img/about1.jpg"
+              src="/assets/home/about2.avif"
               alt="Yoga Pose"
               fill
               className="object-cover"
@@ -69,9 +70,9 @@ export default function AboutSection() {
           </p>
 
           {/* BUTTON */}
-          <button className="mt-6 inline-flex items-center gap-2 bg-defined-purple text-white px-6 py-3 rounded-full shadow-md hover:scale-105 transition-all duration-300">
+          <Link href='/#sucess' className="mt-6 inline-flex items-center gap-2 bg-defined-purple text-white px-6 py-3 rounded-full shadow-md hover:scale-105 transition-all duration-300">
             Our Story →
-          </button>
+          </Link>
         </div>
       </div>
     </section>
