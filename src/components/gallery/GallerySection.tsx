@@ -29,18 +29,11 @@ export default function GallerySection() {
 
         {/* DESC + BUTTON */}
         <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-600 max-w-xl text-center md:text-left">
+          <p className="text-gray-600  text-center md:text-left">
             A glimpse of our vibrant yoga community, capturing moments of dedication, growth, and positivity through live sessions, achievements, and peaceful practice experiences.
           </p>
 
-          <button
-            className="inline-flex items-center gap-2 
-            bg-defined-purple
-            text-white px-5 py-2 rounded-full font-medium 
-            hover:gap-3 transition-all duration-300 shadow-md"
-          >
-            Explore More <FiArrowRight />
-          </button>
+         
         </div>
 
         {/* DESKTOP GRID */}

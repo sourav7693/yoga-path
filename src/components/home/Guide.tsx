@@ -57,7 +57,7 @@ export default function Guide() {
     <section className="w-full py-16 px-4">
       <div className="max-w-[1320px] mx-auto text-center">
       
-        <h2 className="text-2xl md:text-2xl font-normal">
+        <h2 className="text-2xl md:text-2xl font-bold">
           Meet Our{" "}
           <span className="text-[#AD46FF] text-3xl md:text-3xl">
             Expert Yoga Mentor and Guide

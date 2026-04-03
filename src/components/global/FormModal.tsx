@@ -321,8 +321,8 @@ export default function FormModal({
   border flex flex-col gap-2 shadow-2xl
   ${
     mode === "modal"
-      ? "bg-white/10 backdrop-blur-xl border-white/20"
-      : "backdrop-blur-[5px] border-gray-200"
+      ? "bg-white/0 backdrop-blur-xl border-white/20"
+      : "backdrop-blur-[6px] border-gray-200"
   }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -453,8 +453,8 @@ export default function FormModal({
                     verifyAction(fd);
                   });
                 }}
-                className="w-full bg-defined-red text-white py-3 mt-2 rounded-md font-semibold
-             transition-all duration-300 hover:opacity-90 disabled:opacity-60"
+                className="w-full  text-white py-3 mt-2 rounded-md font-semibold
+             transition-all duration-300 hover:opacity-90 disabled:opacity-60 animated-glow-btn2"
               >
                 {verifyPending ? "Verifying..." : "Verify OTP"}
               </button>
@@ -516,9 +516,9 @@ export default function FormModal({
             <button
               type="submit"
               disabled={enrollPending}
-              className="w-full bg-defined-red text-white
+              className="w-full  text-white
                          py-3 mt-2 rounded-md font-semibold
-                         transition-all duration-300 hover:opacity-90"
+                         transition-all duration-300 hover:opacity-90 animated-glow-btn2"
             >
               {enrollPending ? "Enrolling..." : "Enroll Now"}
             </button>

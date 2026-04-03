@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
 export default function MediationApp() {
@@ -28,13 +29,13 @@ export default function MediationApp() {
           </p>
 
           {/* BUTTON */}
-          <button
+           <Link href={"/courses"}
             className="mt-6 inline-flex items-center gap-2 
             bg-[#AD46FF] text-white px-6 py-3 rounded-full 
             font-medium hover:gap-3 transition-all duration-300 shadow-md"
           >
             Explore More <FiArrowRight />
-          </button>
+          </Link>
 
      
           <div className="flex gap-4 mt-6 flex-wrap">

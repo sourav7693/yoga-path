@@ -2,38 +2,75 @@
 import { useState } from "react";
 import { CourseDoc } from "@/models/Course";
 import Image from "next/image";
-import FormModal from "@/components/global/FormModal";
 import Link from "next/link";
+import FormModal from "../global/FormModal";
 
 const YogaCourses = ({ courses }: { courses: CourseDoc[] }) => {
+  const [openForm, setOpenForm] = useState(false);
   return (
-    <section className="py-4 flex flex-col gap-6 max-w-300 mx-auto px-4">
+    <section className="py-6 flex flex-col gap-6 max-w-[1320px] mx-auto px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-defined-purole">
         Online <span className="text-defined-green">Yoga Courses</span>
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
-          <Link
-          href={`/courses/${course.courseSlug}`}
+          <div
             key={course.courseId}
-            className="relative h-80 w-full rounded-2xl overflow-hidden group cursor-pointer"
+            className="bg-gray-100 rounded-2xl overflow-hidden  hover:shadow-lg transition-all duration-300"
           >
-            <Image
-              src={course.thumbnail?.secure_url || ""}
-              alt={course.courseName}
-              fill
-              className="object-cover group-hover:scale-105 transition duration-500"
-            />
+            <Link href={`/courses/${course.courseSlug}`}>
+              <div className="relative h-70 w-full overflow-hidden">
+                <Image
+                  src={course.thumbnail?.secure_url || ""}
+                  alt={course.courseName}
+                  fill
+                  className="object-cover transition duration-500 hover:scale-105"
+                />
+              </div>
+            </Link>
 
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="p-5 flex flex-col gap-3">
+              <h3 className="text-lg font-bold text-[#003D5D]">
+                {course.courseName}
+              </h3>
 
-            <h3 className="absolute bottom-4 left-4 text-white text-base font-semibold">
-              {course.courseName}
-            </h3>
-          </Link>
+              <p className="text-[#003D5D] text-sm leading-relaxed">
+                {course.description?.length > 120
+                  ? course.description.slice(0, 120) + "..."
+                  : course.description}
+              </p>
+
+              <div className="flex gap-3 mt-3">
+                <div className="flex-1 p-[1px] rounded-full bg-gradient-to-r from-white via-transparent to-white">
+                  <Link
+                    href={`/courses/${course.courseSlug}`}
+                    className="block w-full text-center rounded-full py-3 text-sm font-medium
+                      text-[#AD46FF] bg-white/10 backdrop-blur-md hover:bg-white/20 transition border border-white/40"
+                  >
+                    Read More →
+                  </Link>
+                </div>
+
+                <button
+                  onClick={() => setOpenForm(true)}
+                  className="flex-1 bg-gradient-to-r from-[#AD46FF] to-purple-600 text-white rounded-full py-3 text-sm font-medium shadow-md hover:opacity-90 transition"
+                >
+                  Start Journey →
+                </button>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
+
+      {openForm && (
+        <FormModal
+          mode="modal"
+          onClose={() => setOpenForm(false)}
+          courses={courses}
+        />
+      )}
     </section>
   );
 };

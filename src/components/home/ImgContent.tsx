@@ -22,7 +22,7 @@ export default function ImgContent() {
       
         <div className="flex flex-col justify-center text-left text-white">
    
-          <h2 className="text-3xl md:text-2xl font-normal leading-snug">
+          <h2 className="text-3xl md:text-2xl font-bold leading-snug">
             Our Signature{" "}
             <span className=" text-3xl md:text-3xl">Offerings</span>
           </h2>

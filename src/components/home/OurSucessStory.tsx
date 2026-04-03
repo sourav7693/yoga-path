@@ -43,7 +43,7 @@ const togglePlay = (id: string) => {
           <h2 className="text-3xl md:text-4xl font-bold">
             Our Success Stories
           </h2>
-          <p className="text-gray-600 mt-3 max-w-[600px]">
+          <p className="text-gray-600 mt-3 ">
             Real transformations from our students showcase improved health, reduced stress, and inner peace. These inspiring journeys reflect the true power of consistent yoga practice.
           </p>
         </div>

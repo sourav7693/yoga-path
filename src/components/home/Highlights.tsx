@@ -24,7 +24,7 @@ export default function Highlights({ courses }: { courses: CourseDoc[] }) {
 
          
           <div className="absolute bottom-0 left-0 w-full p-5 bg-[#AD46FFE5] text-white">
-            <h3 className="text-lg font-semibold">Yoga Training</h3>
+            <h3 className="text-lg font-bold">Yoga Training</h3>
             <p className="text-sm mt-1">
               Improve flexibility and mental clarity with expert sessions.
             </p>
@@ -89,3 +89,5 @@ export default function Highlights({ courses }: { courses: CourseDoc[] }) {
     </section>
   );
 }
+
+
