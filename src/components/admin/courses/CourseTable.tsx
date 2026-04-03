@@ -50,7 +50,7 @@ export default function CourseTable({ courses }: { courses: CourseDoc[] }) {
 
   return (
     <>
-      <div className="bg-[#F8FAFC] rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
+      <div className="bg-[#F8FAFC] rounded-xl shadow">
         <table className="w-full">
           <thead className="h-16 bg-gray-200">
             <tr>
@@ -69,9 +69,9 @@ export default function CourseTable({ courses }: { courses: CourseDoc[] }) {
             {courses.map((course) => (
               <tr
                 key={course.courseId}
-                className="border-b border-gray-200 text-center last:border-none bg-gray-100"
+                className="border-b text-sm border-gray-200 text-center last:border-none bg-gray-100"
               >
-                <td className="p-3 text-lg font-semibold text-left">{course.courseName}</td>
+                <td className="p-3 text-left">{course.courseName.slice(0,15) + "..."}</td>
 
                 <td>{course.category}</td>
 
@@ -79,7 +79,7 @@ export default function CourseTable({ courses }: { courses: CourseDoc[] }) {
                   ₹{course.courseMRP}
                 </td>
 
-                <td className="text-defined-red font-bold">
+                <td className="text-defined-red">
                   ₹{course.offerPrice}
                 </td>
 

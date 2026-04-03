@@ -28,7 +28,7 @@ export default function LeadTable({ leads }: { leads: LeadDocument[] }) {
 });
 
   return (
-    <div className="bg-[#F8FAFC] rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
+    <div className="bg-[#F8FAFC] rounded-xl shadow">
       <table className="w-full">
         <thead className="h-16 bg-gray-200">
           <tr>
@@ -46,16 +46,18 @@ export default function LeadTable({ leads }: { leads: LeadDocument[] }) {
           {rows.map(({ lead, enroll }, index) => (
             <tr
               key={enroll?._id || `${lead.leadId}-${index}`}
-              className="border-b border-gray-200 text-left bg-gray-100 font-medium"
+              className="border-b text-sm border-gray-200 text-left bg-gray-100"
             >
-              <td className="p-3 font-semibold">{lead.leadId}</td>
+              <td className="p-3">{lead.leadId}</td>
               <td className="text-left">{lead.name}</td>
-              <td>{lead.mobile}</td>
-              <td>{lead.email || "-"}</td>
+              <td>{lead.mobile.split("91")[1]}</td>
+              <td className="text-center">{lead.email || "-"}</td>
 
-              <td>{enroll?.course?.courseName || "No course"}</td>
+              <td className="text-center">
+                {enroll?.course?.courseName.slice(0, 15) || "No course"}
+              </td>
 
-              <td>
+              <td className="text-center">
                 {enroll?.enrolledAt
                   ? new Date(enroll.enrolledAt).toLocaleDateString()
                   : "-"}

@@ -2,6 +2,7 @@ import { getAllLeads } from "@/actions/leads";
 import LeadTable from "@/components/admin/leads/LeadTable";
 import Pagination from "@/components/ui/Pagination";
 import { Enrollment, LeadDocument } from "@/models/Lead";
+import Link from "next/link";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { MdNotificationsActive, MdOutlineAccessTime } from "react-icons/md";
@@ -14,45 +15,59 @@ const page = async ({
     limit?: string;
     category?: string;
     search?: string;
+    status?: string;
   }>;
 }) => {
-    const params = (await searchParams) ?? {};
-    const pageNumber = Number(params?.page) || 1;    
-    const searchQuery = params?.search || "";
-    const limit = Number(params?.limit) || 10;
-    
-   const leadsResult = await getAllLeads(
-     pageNumber,
-     limit,
-     "createdAt",
-     "desc",     
-     searchQuery,
-   );
-   
-   const leads = leadsResult.data;
-   const pagination = leadsResult.pagination;
-   const now = new Date();
-   const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const params = (await searchParams) ?? {};
+  const pageNumber = Number(params?.page) || 1;
+  const searchQuery = params?.search || "";
+  const limit = Number(params?.limit) || 10;
+  const statusFilter = params?.status || "";
 
-   // Total Leads
-   const totalLeads = pagination.totalCount;
+  const leadsResult = await getAllLeads(
+    pageNumber,
+    limit,
+    "createdAt",
+    "desc",
+    searchQuery,
+    statusFilter,
+  );
 
-   // New Leads (last 24h)
- const newLeads = leads.filter((lead: LeadDocument) =>
-   lead.enrollments.some(
-     (e: Enrollment) => e.enrolledAt && new Date(e.enrolledAt) >= last24h,
-   ),
- ).length;
+  const leads = leadsResult.data;
+  const pagination = leadsResult.pagination;
+  const now = new Date();
+  const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-   // Enrolled Leads
-const enrolledLeads = leads.filter((lead : LeadDocument) =>
-  lead.enrollments.some((e : Enrollment) => e.status === "Enrolled"),
-).length;
+  // Total Leads
+  const totalLeads = pagination.totalCount;
 
-   // Pending Leads
-   const pendingLeads = leads.filter((lead: LeadDocument) =>
-     lead.enrollments.some((e : Enrollment) => e.status === "Pending"),
-   ).length;
+  // New Leads (last 24h)
+  const newLeads = leads.filter((lead: LeadDocument) =>
+    lead.enrollments.some(
+      (e: Enrollment) => e.enrolledAt && new Date(e.enrolledAt) >= last24h,
+    ),
+  ).length;
+
+  // Enrolled Leads
+  const enrolledLeads = leads.filter((lead: LeadDocument) =>
+    lead.enrollments.some((e: Enrollment) => e.status === "Enrolled"),
+  ).length;
+
+  // Pending Leads
+  const pendingLeads = leads.filter((lead: LeadDocument) =>
+    lead.enrollments.some((e: Enrollment) => e.status === "Pending"),
+  ).length;
+
+  const createQuery = (newStatus: string) => {
+    const query = new URLSearchParams({
+      page: String(pageNumber),
+      limit: String(limit),
+      search: searchQuery,
+      status: newStatus,
+    });
+
+    return `?${query.toString()}`;
+  };
 
   const cards = [
     {
@@ -83,10 +98,31 @@ const enrolledLeads = leads.filter((lead : LeadDocument) =>
   return (
     <section className="flex flex-col gap-6">
       <div>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-extrabold text-defined-black">
             Lead Management
           </h1>
+
+          {/* <div className="flex gap-2 bg-white p-1 rounded-full shadow-md">
+            {["", "Pending", "Enrolled", "Lost"].map((status) => {
+              const isActive = statusFilter === status;
+
+              return (
+                <Link
+                  key={status}
+                  href={createQuery(status)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition
+            ${
+              isActive
+                ? "bg-defined-red text-white"
+                : "text-defined-black hover:bg-gray-100"
+            }`}
+                >
+                  {status || "All"}
+                </Link>
+              );
+            })}
+          </div> */}
         </div>
         <p className="text-defined-brown">
           Manage and track potential leads for your yoga leads.
@@ -112,7 +148,7 @@ const enrolledLeads = leads.filter((lead : LeadDocument) =>
       </div>
 
       <LeadTable leads={leads} />
-      <Pagination pagination={pagination}/>
+      <Pagination pagination={pagination} />
     </section>
   );
 };

@@ -411,21 +411,38 @@ export async function getAllLeads(
   limit: number | string = 10,
   sort: string = "createdAt",
   order: "asc" | "desc" = "desc",
-  searchQuery?: string,  
+  searchQuery?: string,
+  status?: string,
 ) {
   try {
     await connectDb();
 
-   const filter =
-     searchQuery && searchQuery.trim() !== ""
-       ? {
-           $or: [
-             { name: { $regex: searchQuery, $options: "i" } },
-             { mobile: { $regex: searchQuery, $options: "i" } },
-             { leadId: { $regex: searchQuery, $options: "i" } },
-           ],
-         }
-       : {};       
+    const searchFilter =
+      searchQuery && searchQuery.trim() !== ""
+        ? {
+            $or: [
+              { name: { $regex: searchQuery, $options: "i" } },
+              { mobile: { $regex: searchQuery, $options: "i" } },
+              { leadId: { $regex: searchQuery, $options: "i" } },
+            ],
+          }
+        : {};
+
+      const statusFilter =
+        status && status !== ""
+          ? {
+              enrollments: {
+                $elemMatch: {
+                  status: { $regex: `^${status}$`, $options: "i" }, 
+                },
+              },
+            }
+          : {};
+
+              const filter = {
+                ...searchFilter,
+                ...statusFilter,
+              };
 
     const pageNumber = parseInt(page as string, 10);
     const pageSize = parseInt(limit as string, 10);

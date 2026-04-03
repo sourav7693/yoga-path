@@ -110,8 +110,8 @@ const page = async () => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between gap-4 text-defined-black font-bold">
-        <div className="bg-gray-200 gap-2 flex flex-col flex-1 rounded-xl p-4 w-full">
+      <div className="flex items-center justify-between gap-4 text-defined-black">
+        <div className="bg-white gap-2 flex flex-col flex-1 rounded-xl p-4 w-full shadow-2xl">
           <div className="flex justify-between">
             <p>Recent Courses</p>
             <Link
@@ -121,7 +121,7 @@ const page = async () => {
               View All
             </Link>
           </div>
-          <div className="bg-[#F8FAFC] rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
+          <div className="bg-white rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
             <table className="w-full">
               <thead className="h-16 bg-gray-200">
                 <tr>
@@ -140,9 +140,9 @@ const page = async () => {
                 {recentCourses.map((course) => (
                   <tr
                     key={course.courseId}
-                    className=" border-b border-gray-200 text-center last:border-none bg-gray-100 font-medium"
+                    className=" border-b border-gray-200 text-center last:border-none bg-gray-100"
                   >
-                    <td className=" text-lg text-left line-clamp-1">
+                    <td className="text-left line-clamp-1 py-1">
                       {course.courseName}
                     </td>
 
@@ -185,7 +185,7 @@ const page = async () => {
             </table>
           </div>
         </div>
-        <div className="bg-gray-200 gap-2 flex flex-col flex-1 rounded-xl p-4 w-full">
+        <div className="bg-white gap-2 flex flex-col flex-1 rounded-xl p-4 w-full">
           <div className="flex justify-between">
             <p>Recent Leads</p>
             <Link
@@ -195,7 +195,7 @@ const page = async () => {
               View All
             </Link>
           </div>
-          <div className="bg-[#F8FAFC] rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
+          <div className="bg-white rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
             <table className="w-full">
               <thead className="h-16 bg-gray-200">
                 <tr>
@@ -213,11 +213,11 @@ const page = async () => {
                 {rows.map(({ lead, enroll }, index) => (
                   <tr
                     key={enroll?._id || `${lead.leadId}-${index}`}
-                    className="border-b border-gray-200 text-center bg-gray-100 font-medium"
+                    className="border-b border-gray-200 text-center bg-gray-100 text-sm"
                   >
                     {/* <td className="p-3 font-semibold">{lead.leadId}</td> */}
-                    <td className="text-left">{lead.name}</td>
-                    <td>{lead.mobile}</td>
+                    <td className="text-left py-2">{lead.name}</td>
+                    <td>{lead.mobile.split("91")[1]}</td>
                     {/* <td>{lead.email || "-"}</td> */}
 
                     <td>{enroll?.course?.courseName || "No course"}</td>
@@ -230,7 +230,7 @@ const page = async () => {
 
                     <td>
                       <span
-                        className={`px-2 py-1 rounded-full text-sm font-semibold ${
+                        className={`px-2 py-1 rounded-full text-sm ${
                           enroll?.status === "Enrolled"
                             ? "bg-green-100 text-green-700"
                             : enroll?.status === "Pending"

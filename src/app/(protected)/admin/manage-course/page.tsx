@@ -85,7 +85,7 @@ const page = async ({
     <section className="flex flex-col gap-6">
       <CourseHeader />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {cards.map((card, index) => (
           <div
             key={index}
@@ -104,7 +104,7 @@ const page = async ({
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <CourseTable courses={courses} />
       <Pagination pagination={pagination} mode={true} />

@@ -13,9 +13,9 @@ import Highlights from "@/components/home/Highlights";
 import Features from "@/components/home/Features";
 import ImgContent from "@/components/home/ImgContent";
 import MediationApp from "@/components/home/MediationApp";
-import GallerySection from "@/components/gallery/GallerySection";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { getGallery } from "@/actions/gallery";
 
 const OurSucessStory = dynamic(
   () => import("@/components/home/OurSucessStory"),
@@ -23,6 +23,14 @@ const OurSucessStory = dynamic(
     loading: () => <p className="text-center py-10">Loading success stories...</p>,
    
   }
+);
+const GallerySection = dynamic(
+  () => import("@/components/gallery/GallerySection"),
+  {
+    loading: () => (
+      <p className="text-center py-10">Loading gallery...</p>
+    ),
+  },
 );
 
 
@@ -36,9 +44,10 @@ export const metadata: Metadata = {
 
 
 export default async function Home() {
-  const [courseResult, reelsResult] = await Promise.all([getAllCourses(1,0), getReels(1,0)]);  
+  const [courseResult, reelsResult, galleryResult] = await Promise.all([getAllCourses(1,0), getReels(1,0), getGallery(1,0)]);  
   const courses = courseResult.data;
   const reels = reelsResult.data;
+  const gallery = galleryResult.data;
   return (
     <MainTemplates>
       <HomeBanner courses={courses}/>
@@ -51,7 +60,7 @@ export default async function Home() {
        <ImgContent/>
        <MediationApp/>
       <OurSucessStory reels={reels}/>
-      <GallerySection/>
+      <GallerySection gallery={gallery}/>
      
       {/* <WhyChoose /> */}
       <PrisingSection courses={courses}/>

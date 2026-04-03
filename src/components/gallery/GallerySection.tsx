@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { FiArrowRight } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import { Autoplay } from "swiper/modules";
+import { GalleryDocument } from "@/models/Gallery";
 
 const images = [
 
@@ -18,9 +17,9 @@ const images = [
   "/assets/new-img/offering.png",
 ];
 
-export default function GallerySection() {
+export default function GallerySection({gallery} : {gallery: GalleryDocument[]}) {
   return (
-    <section className="w-full py-16 px-4 bg-white">
+    <section className="w-full py-4 lg:py-12 px-4 bg-white">
       <div className="max-w-[1320px] mx-auto">
         {/* TITLE */}
         <h2 className="text-3xl md:text-4xl font-bold text-left">
@@ -38,14 +37,14 @@ export default function GallerySection() {
 
         {/* DESKTOP GRID */}
         <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-          {images.map((img, i) => (
+          {gallery.map((img) => (
             <div
-              key={i}
+              key={img.galleryId}
               className="relative w-full h-[200px] rounded-xl overflow-hidden"
             >
               <Image
-                src={img}
-                alt="Gallery"
+                src={img.imageUrl}
+                alt={img.title || "Gallery Image"}
                 fill
                 className="object-cover hover:scale-110 transition duration-500"
               />
@@ -62,12 +61,12 @@ export default function GallerySection() {
             autoplay={{ delay: 2500 }}
             loop={true}
           >
-            {images.map((img, i) => (
-              <SwiperSlide key={i}>
+            {gallery.map((img) => (
+              <SwiperSlide key={img.galleryId}>
                 <div className="relative w-full h-[220px] rounded-xl overflow-hidden">
                   <Image
-                    src={img}
-                    alt="Gallery"
+                    src={img.imageUrl}
+                    alt={img.title || "Gallery Image"}
                     fill
                     className="object-cover"
                   />

@@ -36,7 +36,7 @@ const togglePlay = (id: string) => {
 };
 
   return (
-    <section className="w-full py-20" id="sucess">
+    <section className="w-full py-4 lg:py-16" id="sucess">
       <div className="max-w-[1300px] mx-auto px-4">
         {/* Title */}
         <div className="mb-12">
@@ -44,7 +44,9 @@ const togglePlay = (id: string) => {
             Our Success Stories
           </h2>
           <p className="text-gray-600 mt-3 ">
-            Real transformations from our students showcase improved health, reduced stress, and inner peace. These inspiring journeys reflect the true power of consistent yoga practice.
+            Real transformations from our students showcase improved health,
+            reduced stress, and inner peace. These inspiring journeys reflect
+            the true power of consistent yoga practice.
           </p>
         </div>
 
@@ -80,7 +82,8 @@ const togglePlay = (id: string) => {
               <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white">
                 {/* Video */}
                 <div className="relative aspect-[9/16] bg-black">
-                  <video                    
+                  <video
+                    controls={playing === reel.reelId}
                     ref={(el) => {
                       videoRefs.current[reel.reelId] = el;
                     }}
@@ -97,7 +100,10 @@ const togglePlay = (id: string) => {
                       }
                     }}
                     src={reel.videoUrl}
-                    className="w-full h-full object-cover"
+                    poster={reel.videoUrl
+                      .replace("/upload/", "/upload/so_3/")
+                      .replace(".mp4", ".jpg")}
+                    className="w-full h-full object-cover transition duration-300"
                     playsInline
                   />
 
