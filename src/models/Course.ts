@@ -1,11 +1,18 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export interface CourseDoc extends Document {
   courseId: string;
   courseName: string;
   courseSlug: string;
   description?: string;
-
+metaTitle: string;
+metaDescription: string;
   category?: string;
   days?: string;
 
@@ -16,6 +23,7 @@ export interface CourseDoc extends Document {
   courseMRP: number;
   discount?: number;
   offerPrice?: number;
+   faqs?: FAQItem[];
 
   meetLink?: string;
   googleEventId?: string;
@@ -28,6 +36,7 @@ export interface CourseDoc extends Document {
   status: "Active" | "Draft";
 
   students: Types.ObjectId[];
+
 }
 
 const CourseSchema = new Schema<CourseDoc>(
@@ -37,6 +46,18 @@ const CourseSchema = new Schema<CourseDoc>(
       required: true,
       unique: true,
     },
+
+    metaTitle: {
+  type: String,
+   required: true,
+  trim: true,
+},
+
+metaDescription: {
+  type: String,
+   required: true,
+  trim: true,
+},
     courseName: {
       type: String,
       required: true,
@@ -95,6 +116,19 @@ const CourseSchema = new Schema<CourseDoc>(
       enum: ["Active", "Draft"],
       default: "Active",
     },
+
+
+    faqs: [
+  {
+    question: {
+      type: String,
+      trim: true,
+    },
+    answer: {
+      type: String,
+    },
+  },
+],
 
     students: {
       type: [

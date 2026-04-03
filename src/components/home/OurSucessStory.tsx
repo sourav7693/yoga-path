@@ -44,8 +44,7 @@ const togglePlay = (id: string) => {
             Our Success Stories
           </h2>
           <p className="text-gray-600 mt-3 max-w-[600px]">
-            Watch real experiences from our students who achieved career success
-            through our practical and industry-focused training programs.
+            Real transformations from our students showcase improved health, reduced stress, and inner peace. These inspiring journeys reflect the true power of consistent yoga practice.
           </p>
         </div>
 

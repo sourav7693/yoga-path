@@ -1,13 +1,39 @@
 import AboutSection from "@/components/home/AboutSection";
 import HomeBanner from "@/components/home/Homebanner";
 import MainTemplates from "@/templates/MainTemplates";
-import  OurSucessStory from "@/components/home/OurSucessStory"
-import WhyChoose from "@/components/home/WhyChose";
+// import WhyChoose from "@/components/home/WhyChose";
 import PrisingSection from "@/components/home/PricisingSection"
-import Testimonial from "@/components/home/Testimonial"
+// import Testimonial from "@/components/home/Testimonial"
 import { getAllCourses } from "@/actions/course";
 import YogaCourses from "@/components/home/YogaCourses";
 import { getReels } from "@/actions/reel";
+import Guide from "@/components/home/Guide";
+import SignatureOffering from "@/components/home/SignatureOffering";
+import Highlights from "@/components/home/Highlights";
+import Features from "@/components/home/Features";
+import ImgContent from "@/components/home/ImgContent";
+import MediationApp from "@/components/home/MediationApp";
+import GallerySection from "@/components/gallery/GallerySection";
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const OurSucessStory = dynamic(
+  () => import("@/components/home/OurSucessStory"),
+  {
+    loading: () => <p className="text-center py-10">Loading success stories...</p>,
+   
+  }
+);
+
+
+
+export const metadata: Metadata = {
+  title:
+    "Online Yoga Courses in North Bengal | The Yoga Path",
+  description:
+    "Join the best online yoga courses in North Bengal with The Yoga Path. Learn from expert trainers, flexible classes, and start your wellness journey from anywhere.",
+};
+
 
 export default async function Home() {
   const [courseResult, reelsResult] = await Promise.all([getAllCourses(1,0), getReels(1,0)]);  
@@ -17,11 +43,19 @@ export default async function Home() {
     <MainTemplates>
       <HomeBanner courses={courses}/>
       <AboutSection />
+       <YogaCourses courses={courses} />
+      <Guide/>
+      <SignatureOffering/>
+      <Highlights courses={courses}/>
+      <Features/>
+       <ImgContent/>
+       <MediationApp/>
       <OurSucessStory reels={reels}/>
-      <YogaCourses courses={courses} />
-      <WhyChoose />
+      <GallerySection/>
+     
+      {/* <WhyChoose /> */}
       <PrisingSection courses={courses}/>
-      <Testimonial />
+      {/* <Testimonial /> */}
     </MainTemplates>
   );
 }

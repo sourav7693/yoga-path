@@ -88,7 +88,7 @@ const PrivacyPolicyPage = () => {
             </p>
             <p className="mt-2">
               📍 Ghogomali, Siliguri, WB – 734006 <br />
-              📧 theyogapath@gmail.com
+              📧 yogapathbypayel@gmail.com
             </p>
           </div>
 

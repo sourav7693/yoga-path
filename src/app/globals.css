@@ -13,6 +13,10 @@
   --color-defined-blue: #003D5D;
   --color-defined-black: #0F172A;
   --color-defined-brown: #64748B;
+  --color-defined-purple: #AD46FF;
+  --color-defined-green: #16A34A;
+
+ 
 }
 
 html{
@@ -126,6 +130,49 @@ button{
   }
 
   .animated-glow-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    height: 100%;
+    width: 50%;
+
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.6),
+      transparent 70%
+    );
+
+    transform: skewX(-25deg);
+    animation: shineMove 1.5s linear infinite;
+  }
+
+  @keyframes shineMove {
+    0% {
+      left: -60%;
+    }
+    100% {
+      left: 120%;
+    }
+  }
+}
+
+
+
+
+@media (max-width: 2550px) {
+
+  .animated-glow-btn2 {
+    position: relative;
+    overflow: hidden;   
+    border-radius: 4px;
+    background: linear-gradient(90deg, #d54efa, #e591f2);
+    animation: none; /* remove desktop animation */
+    box-shadow: none;
+  }
+
+  .animated-glow-btn2::after {
     content: "";
     position: absolute;
     top: 0;

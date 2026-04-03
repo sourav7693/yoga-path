@@ -2,25 +2,29 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-const inter = Inter({ display: "swap", subsets: ["latin"] });
+
+// ✅ Rename variable (important)
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"], 
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title:
-    "The Yoga Path Siliguri | Online Yoga Courses, Meditation & Wellness Training",
+    "Online Yoga Courses in North Bengal | The Yoga Path",
   description:
-    "Join The Yoga Path Siliguri for expert-led online yoga courses, meditation classes, and wellness programs. Learn yoga from certified instructors and start your journey to a healthier life today.",
+    "Join the best online yoga courses in North Bengal with The Yoga Path. Learn from expert trainers, flexible classes, and start your wellness journey from anywhere.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} antialiased`}
-      >
+      <body className={`${inter.className} antialiased`}>
         {children}
         <ToastContainer position="top-right" autoClose={3000} />
       </body>

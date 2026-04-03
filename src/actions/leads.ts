@@ -8,7 +8,7 @@ import axios from "axios";
 import { Course } from "@/models/Course";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import calendar, {  getAuthClient } from "@/lib/googleCalendar";
 import fs from "fs";
 
 
@@ -312,7 +312,7 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
 
     if (course.googleEventId) {
       try {
-        const auth = getAuthClient();
+        const auth = await getAuthClient();
         const event = await calendar.events.get({
           calendarId: "primary",
           eventId: course.googleEventId,

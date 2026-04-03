@@ -27,8 +27,8 @@ export default function PricingSection({courses} : {courses : CourseDoc[]}) {
         <div className="max-w-[1200px] mx-auto px-4 text-center">
 
           {/* Prices */}
-          <p className="text-lg line-through text-gray-700">
-            Total Value : ₹7,486/-
+          <p className="text-lg  text-gray-700">
+            Transform Your Mind & Body with Expert Guidance
           </p>
 
           <h3 className="text-2xl md:text-3xl font-semibold mt-2">
@@ -38,7 +38,7 @@ export default function PricingSection({courses} : {courses : CourseDoc[]}) {
           {/* Today's Price Box */}
           <div className="inline-block bg-white rounded-xl px-6 py-3 mt-6 shadow-md">
             <h3 className="text-2xl md:text-3xl font-bold">
-              Todays Price : ₹99/-
+              Courses Starting From Just ₹799/-
             </h3>
           </div>
 
@@ -48,14 +48,14 @@ export default function PricingSection({courses} : {courses : CourseDoc[]}) {
               onClick={() => setOpenForm(true)}
              className="animated-glow-btn "
             >
-              REGISTER NOW AT ₹99/- ONLY
+              BOOK YOUR SLOT NOW
             </button>
 
           </div>
 
           {/* Sub Text */}
           <p className="mt-8 text-base md:text-lg font-medium text-gray-800">
-            Reserve Your Seat Before The Timer Ends To Unlock End Bonuses Worth ₹6,487/-
+           Limited seats available – experience true inner balance & energy awakening.
           </p>
 
           {/* Countdown */}

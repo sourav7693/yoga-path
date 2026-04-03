@@ -30,6 +30,42 @@ export default function CourseForm({
   const [discount, setDiscount] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+
+  const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
+
+  const [isGoogleConnected, setIsGoogleConnected] = useState(false);
+
+  useEffect(() => {
+    const checkGoogle = async () => {
+      const res = await fetch("/api/auth/google/status");
+      const data = await res.json();
+      setIsGoogleConnected(data.connected);
+    };
+
+    checkGoogle();
+  }, []);
+
+  const addFaq = () => {
+    setFaqs([...faqs, { question: "", answer: "" }]);
+  };
+
+  const removeFaq = (index: number) => {
+    const updated = [...faqs];
+    updated.splice(index, 1);
+    setFaqs(updated);
+  };
+
+  const handleFaqChange = (
+    index: number,
+    field: "question" | "answer",
+    value: string,
+  ) => {
+    const updated = [...faqs];
+    updated[index][field] = value;
+    setFaqs(updated);
+  };
 
   const calculateEndDate = (start: string, durationValue: string) => {
     if (!start) return;
@@ -54,24 +90,26 @@ export default function CourseForm({
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
     message: "",
-    authRequired: false,
   });
 
   useEffect(() => {
+    if (!state.message) return;
     if (state.success) {
       closeModal();
       toast.success(state.message);
-    } else if (state.authRequired) {
-      toast.info("Redirecting to Google to connect Calendar...");
-      window.location.href = "/api/auth/google";
+    } else {
+      toast.error(state.message);
     }
-  }, [state.success, state.message, state.authRequired, closeModal]);
+  }, [state.success, state.message]);
 
   useEffect(() => {
     if (!course) return;
 
     setMrp(course.courseMRP || 0);
     setDiscount(course.discount || 0);
+    setMetaTitle(course.metaTitle || "");
+    setMetaDescription(course.metaDescription || "");
+
     setDuration(course.days || "1month");
     setStartDate(
       course.startDate
@@ -92,6 +130,9 @@ export default function CourseForm({
         : "",
     );
     setPreview(course.thumbnail?.secure_url || null);
+    if (course.faqs && course.faqs.length > 0) {
+      setFaqs(course.faqs);
+    }
   }, [course]);
 
   return (
@@ -106,7 +147,14 @@ export default function CourseForm({
                 ? "View Course"
                 : "Add Course"}
           </h2>
-
+          {!isGoogleConnected && (
+            <button
+              onClick={() => (window.location.href = "/api/auth/google")}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md animate-pulse hover:scale-105 transition-all"
+            >
+              🔗 Connect Google Calendar
+            </button>
+          )}
           <button
             onClick={closeModal}
             className="text-gray-500 hover:text-black text-xl"
@@ -119,6 +167,33 @@ export default function CourseForm({
         <form action={formAction} encType="multipart/form-data">
           <fieldset disabled={mode === "view"} className="flex flex-col gap-4">
             <input type="hidden" name="courseId" value={course?.courseId} />
+            <div className="flex flex-col gap-2">
+              <label className="text-defined-black font-bold">
+                Meta Title (SEO)
+              </label>
+              <input
+                name="metaTitle"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                maxLength={60}
+                placeholder="SEO Title for Google"
+                className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-defined-black font-bold">
+                Meta Description (SEO)
+              </label>
+              <textarea
+                name="metaDescription"
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                maxLength={160}
+                placeholder="Short description for search engines..."
+                className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none min-h-20"
+              />
+            </div>
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="courseName"
@@ -361,7 +436,56 @@ export default function CourseForm({
                 />
               </div>
             </div>
+            <div className="flex flex-col gap-3">
+              <label className="text-defined-black font-bold">FAQs</label>
+
+              {faqs.map((faq, i) => (
+                <div
+                  key={i}
+                  className="border p-3 rounded-xl bg-gray-50 flex flex-col gap-2 relative"
+                >
+                  <input
+                    type="text"
+                    placeholder="Question"
+                    value={faq.question}
+                    onChange={(e) =>
+                      handleFaqChange(i, "question", e.target.value)
+                    }
+                    className="border p-2 rounded-lg outline-none"
+                  />
+
+                  <textarea
+                    placeholder="Answer"
+                    value={faq.answer}
+                    onChange={(e) =>
+                      handleFaqChange(i, "answer", e.target.value)
+                    }
+                    className="border p-2 rounded-lg outline-none"
+                  />
+
+                  {faqs.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeFaq(i)}
+                      className="absolute top-0 right-0 size-[1.5rem] rounded-full text-white bg-red-500 text-sm"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addFaq}
+                className="text-sm text-purple-600 font-medium"
+              >
+                + Add FAQ
+              </button>
+            </div>
           </fieldset>
+
+          <input type="hidden" name="faqs" value={JSON.stringify(faqs)} />
 
           <div className="flex justify-end gap-3 mt-4">
             <button

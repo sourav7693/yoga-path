@@ -4,17 +4,20 @@ import { generateCustomId } from "@/helper/generateCustomId";
 import { parseImage } from "@/helper/parseImage";
 import { deleteFile, uploadFile } from "@/lib/cloudinaryService";
 import { connectDb } from "@/lib/connection";
-import { Course } from "@/models/Course";
+import { Course, FAQItem } from "@/models/Course";
 import { generateSlug } from "@/helper/generateSlug";
 import { revalidatePath } from "next/cache";
-import calendar, { TOKEN_PATH, getAuthClient } from "@/lib/googleCalendar";
+import calendar, {  getAuthClient } from "@/lib/googleCalendar";
 import fsSync from "fs";
+import { GoogleToken } from "@/models/GoogleToken";
 
 export async function createCourse(prevState: unknown, formData: FormData) {
   await connectDb();
 
   const courseName = formData.get("courseName") as string;
   const description = formData.get("description") as string;
+    const metaTitle = formData.get("metaTitle") as string;
+  const metaDescription = formData.get("metaDescription") as string;
 
   const category = formData.get("category") as string;
   const days = formData.get("days") as string;
@@ -34,8 +37,25 @@ export async function createCourse(prevState: unknown, formData: FormData) {
 
   const slug = generateSlug(courseName);
   const offerPrice = Number(formData.get("offerPrice"));
+  let faqs: FAQItem[] = [];
+
+const faqsRaw = formData.get("faqs") as string;
+
+
+if (faqsRaw) {
+  try {
+    faqs = JSON.parse(faqsRaw);
+  } catch (error) {
+    return { success: false, message: "Invalid FAQ format" };
+  }
+}
+
+
+
 
   if (
+    !metaTitle ||
+    !metaDescription||
     !courseName ||
     !description ||
     !category ||
@@ -45,7 +65,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     !endDate ||
     !meetingDuration ||
     !courseMRP ||
-    !discount ||
+    discount == null || isNaN(discount) ||
     !thumbnail
   ) {
     return { success: false, message: "All fields are required" };
@@ -75,18 +95,21 @@ export async function createCourse(prevState: unknown, formData: FormData) {
     return { success: false, message: "Image upload failed" };
   }  
 
-  if (!fsSync.existsSync(TOKEN_PATH)) {
-    return {
-      success: false,
-      message: "Please connect your Google Calendar account first",
-      authRequired: true,
-    };
-  }
+const tokenDoc = await GoogleToken.findOne({});
+if (!tokenDoc) {
+  return {
+    success: false,
+    message: "Please connect your Google Calendar account first",
+  
+  };
+}
 
-  const auth = getAuthClient();
-  if (!auth) {
-    return { success: false, message: "Google Calendar not configured" };
-  }
+
+
+const auth = await getAuthClient(); 
+if (!auth) {
+  return { success: false, message: "Google Calendar not configured" };
+}
 
   const event = await calendar.events.insert({
     calendarId: "primary",
@@ -123,6 +146,8 @@ export async function createCourse(prevState: unknown, formData: FormData) {
   await Course.create({
     courseId,
     courseName,
+    metaTitle,
+    metaDescription,
     courseSlug: slug,
     description,
     category,
@@ -139,6 +164,7 @@ export async function createCourse(prevState: unknown, formData: FormData) {
       secure_url: fileUploadResult.secure_url,
       public_id: fileUploadResult.public_id,
     },
+    faqs,
   });
 
   revalidatePath("/admin/manage-course");
@@ -230,6 +256,33 @@ export async function getAllCourses(
   }
 }
 
+
+export async function getCourseBySlug(slug: string) {
+  try {
+    await connectDb();
+ 
+    const course = await Course.findOne({
+      courseSlug: slug,
+      $or: [
+        { endDate: { $exists: false } },
+        { endDate: { $gte: new Date() } },
+      ],
+    }).lean();
+ 
+    if (!course) {
+      return { success: false, data: null };
+    }
+ 
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(course)),
+    };
+  } catch (error) {
+    console.error("getCourseBySlug error:", error);
+    return { success: false, data: null };
+  }
+}
+
 export async function updateCourse(prevState: unknown, formData: FormData) {
   try {
     await connectDb();
@@ -249,10 +302,14 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
     const updatedData: Record<string, unknown> = {
       courseName: (formData.get("courseName") as string)?.trim(),
       description: (formData.get("description") as string)?.trim(),
+            metaTitle: (formData.get("metaTitle") as string)?.trim(),
+      metaDescription: (formData.get("metaDescription") as string)?.trim(),
       category: (formData.get("category") as string)?.trim(),
       days: (formData.get("days") as string)?.trim(),
-      startDate: new Date(`${formData.get("startDate")}T${formData.get("startTime")}:00`),
-      endDate: formData.get("endDate"),
+      startDate: new Date(
+        `${formData.get("startDate")}T${formData.get("startTime")}:00`
+      ),
+      endDate: new Date(formData.get("endDate") as string),
       meetingDuration: formData.get("meetingDuration"),
       courseMRP: Number(formData.get("courseMRP")),
       discount: Number(formData.get("discount")),
@@ -263,37 +320,66 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
       updatedData.courseSlug = generateSlug(updatedData.courseName as string);
     }
 
+
+    type FAQItem = {
+      question: string;
+      answer: string;
+    };
+
+    let faqs: FAQItem[] = [];
+
+    const faqsRaw = formData.get("faqs") as string;
+
+    if (faqsRaw) {
+      try {
+        faqs = JSON.parse(faqsRaw);
+        faqs = faqs.filter(
+          (f) => f.question?.trim() && f.answer?.trim()
+        );
+
+        updatedData.faqs = faqs;
+
+      } catch {
+        return { success: false, message: "Invalid FAQ format" };
+      }
+    }
+
     const newStartDate = formData.get("startDate") as string | null;
     const newStartTime = formData.get("startTime") as string | null;
     const newEndDate = formData.get("endDate") as string | null;
     const newMeetingDuration = formData.get("meetingDuration") as string | null;
 
-    const combinedNewStartDate = newStartDate && newStartTime ? new Date(`${newStartDate}T${newStartTime}:00`) : null;
+    const combinedNewStartDate =
+      newStartDate && newStartTime
+        ? new Date(`${newStartDate}T${newStartTime}:00`)
+        : null;
 
     const startDateChanged =
       combinedNewStartDate && course.startDate
         ? combinedNewStartDate.getTime() !==
           new Date(course.startDate).getTime()
         : Boolean(combinedNewStartDate) !== Boolean(course.startDate);
+
     const endDateChanged =
       newEndDate && course.endDate
         ? new Date(newEndDate).getTime() !== new Date(course.endDate).getTime()
         : Boolean(newEndDate) !== Boolean(course.endDate);
+
     const meetingDurationChanged =
       newMeetingDuration !== course.meetingDuration;
 
-    if (!fsSync.existsSync(TOKEN_PATH)) {
-      return {
-        success: false,
-        message: "Please connect your Google Calendar account first",
-        authRequired: true,
-      };
-    }
-
-    const auth = getAuthClient();
-    if (!auth) {
-      return { success: false, message: "Google Calendar not configured" };
-    }
+const tokenDoc = await GoogleToken.findOne({});
+if (!tokenDoc) {
+  return {
+    success: false,
+    message: "Please connect your Google Calendar account first",
+    authRequired: true,
+  };
+}
+const auth = await getAuthClient();
+if (!auth) {
+  return { success: false, message: "Google Calendar not configured" };
+}
 
     if (!course.googleEventId || !course.meetLink) {
       const event = await calendar.events.insert({
@@ -301,16 +387,19 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
         conferenceDataVersion: 1,
         auth: auth,
         requestBody: {
-          summary: (updatedData.courseName as string) || course.courseName,
+          summary:
+            (updatedData.courseName as string) || course.courseName,
           description:
             (updatedData.description as string) || course.description,
           start: {
-            dateTime: (combinedNewStartDate || new Date(course.startDate)).toISOString(),
+            dateTime: (
+              combinedNewStartDate || new Date(course.startDate)
+            ).toISOString(),
             timeZone: "Asia/Kolkata",
           },
           end: {
             dateTime: new Date(
-              newEndDate || course.endDate || new Date(),
+              newEndDate || course.endDate || new Date()
             ).toISOString(),
             timeZone: "Asia/Kolkata",
           },
@@ -340,22 +429,26 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
         eventId: course.googleEventId,
         auth: auth,
         requestBody: {
-          summary: (updatedData.courseName as string) || course.courseName,
+          summary:
+            (updatedData.courseName as string) || course.courseName,
           description:
             (updatedData.description as string) || course.description,
           start: {
-            dateTime: (combinedNewStartDate || new Date(course.startDate)).toISOString(),
+            dateTime: (
+              combinedNewStartDate || new Date(course.startDate)
+            ).toISOString(),
             timeZone: "Asia/Kolkata",
           },
           end: {
             dateTime: new Date(
-              newEndDate || course.endDate || new Date(),
+              newEndDate || course.endDate || new Date()
             ).toISOString(),
             timeZone: "Asia/Kolkata",
           },
         },
       });
     }
+
 
     const newThumbnail = formData.get("thumbnail") as File | null;
 
@@ -372,13 +465,13 @@ export async function updateCourse(prevState: unknown, formData: FormData) {
           public_id: uploadResult.public_id,
           secure_url: uploadResult.secure_url,
         };
-      }      
+      }
     }
 
     const updatedCourse = await Course.findOneAndUpdate(
       { courseId },
       { $set: updatedData },
-      { new: true },
+      { new: true }
     );
 
     if (!updatedCourse) {
@@ -435,3 +528,5 @@ export async function deleteCourse(courseId: string) {
     };
   }
 }
+
+

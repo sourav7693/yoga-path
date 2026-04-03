@@ -15,8 +15,6 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { allowOnlyNumbers, blockNumbersInText } from "@/helper/inputHandlers";
 import { useRouter } from "next/navigation";
 
-
-
 type SelectedCourse = {
   courseId: string;
   location?: string;
@@ -74,10 +72,12 @@ export default function FormModal({
   onClose,
   courses,
   mode = "modal",
+  defaultCourseId
 }: {
   onClose?: () => void;
   courses: CourseDoc[];
   mode: "modal" | "inline";
+  defaultCourseId?:string
 }) {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -131,30 +131,30 @@ export default function FormModal({
     null,
   );
 
-useEffect(() => {
-  if (!onClose) return; // inline form, no modal behaviour
+  useEffect(() => {
+    if (!onClose) return; // inline form, no modal behaviour
 
-  const handleEsc = (e: KeyboardEvent) => {
-    if (e.key === "Escape") onClose();
-  };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
 
-  document.addEventListener("keydown", handleEsc);
-  document.body.style.overflow = "hidden";
-
-  return () => {
-    document.removeEventListener("keydown", handleEsc);
-    document.body.style.overflow = "auto";
-  };
-}, [onClose]);
-
-useEffect(() => {
-  if (mode === "modal") {
+    document.addEventListener("keydown", handleEsc);
     document.body.style.overflow = "hidden";
+
     return () => {
+      document.removeEventListener("keydown", handleEsc);
       document.body.style.overflow = "auto";
     };
-  }
-}, [mode]);
+  }, [onClose]);
+
+  useEffect(() => {
+    if (mode === "modal") {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    }
+  }, [mode]);
 
   useEffect(() => {
     if (!otpState) return;
@@ -218,10 +218,10 @@ useEffect(() => {
 
       const res = await createPaymentOrder(null, orderFd);
 
-       if (!res.success) {
-         router.push("/payment-error?reason=order-failed");
-         return;
-       }
+      if (!res.success) {
+        router.push("/payment-error?reason=order-failed");
+        return;
+      }
 
       const { order, key } = res;
 
@@ -267,9 +267,7 @@ useEffect(() => {
           const enroll = await completeEnrollment(null, enrollFd);
 
           if (enroll.success) {
-            router.push(
-              `/thank-you?paymentId=${response.razorpay_payment_id}`,
-            );
+            router.push(`/thank-you?paymentId=${response.razorpay_payment_id}`);
           } else {
             router.push(
               `/payment-error?reason=enrollment-failed&paymentId=${response.razorpay_payment_id}`,
@@ -298,7 +296,7 @@ useEffect(() => {
       razorpay.open();
     } catch (err) {
       console.error(err);
-     router.push("/payment-error?reason=exception");
+      router.push("/payment-error?reason=exception");
     }
   };
 
@@ -324,7 +322,7 @@ useEffect(() => {
   ${
     mode === "modal"
       ? "bg-white/10 backdrop-blur-xl border-white/20"
-      : "bg-black/50 backdrop-blur-xl border-gray-200"
+      : "backdrop-blur-[5px] border-gray-200"
   }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -341,14 +339,16 @@ useEffect(() => {
 
         <h3 className="text-[17px] font-semibold text-white text-left flex items-center gap-2">
           {step > 1 && (
-            <button onClick={() => {
-  if (step === 2) setStep(1);
-  if (step === 3) setStep(2);
-}}>
+            <button
+              onClick={() => {
+                if (step === 2) setStep(1);
+                if (step === 3) setStep(2);
+              }}
+            >
               <IoMdArrowRoundBack className="text-xl hover:scale-110 transition" />
             </button>
           )}
-          Lets Talk to Our Counsellors
+          Lets Talk To Our Fitness Experts
         </h3>
 
         {/* Step Indicator */}
@@ -404,8 +404,8 @@ useEffect(() => {
 
               <input
                 type="text" // Use "text" for maxLength to work reliably
-  minLength={10}
-  maxLength={10}
+                minLength={10}
+                maxLength={10}
                 name="mobile"
                 value={formData.mobile}
                 onKeyDown={allowOnlyNumbers}
@@ -429,13 +429,14 @@ useEffect(() => {
                 />
               )}
             </div>
+            
             {!otpMode ? (
               <button
                 type="submit"
                 disabled={otpPending}
-                className="w-full bg-defined-red text-white
+                className="w-[100%] bg-[#AD46FF] text-white
                          py-3 mt-2 rounded-md font-semibold
-                         transition-all duration-300 hover:opacity-90"
+                         transition-all duration-300 hover:opacity-90 animated-glow-btn2"
               >
                 {otpPending ? "Sending OTP..." : "Register Now"}
               </button>
@@ -467,6 +468,7 @@ useEffect(() => {
             <div className="rounded-[10px] overflow-hidden">
               <select
                 name="courseId"
+                 defaultValue={defaultCourseId} 
                 required
                 className={`${inputClass} rounded-tl-[10px] rounded-tr-[10px]`}
               >
@@ -491,7 +493,7 @@ useEffect(() => {
 
               <input
                 type="text"
-                name="location"                
+                name="location"
                 placeholder="Location"
                 className={inputClass}
               />
@@ -505,7 +507,7 @@ useEffect(() => {
 
               <input
                 type="text"
-                name="remark"                
+                name="remark"
                 placeholder="Remark"
                 className={`${inputClass} rounded-bl-[10px] rounded-br-[10px]`}
               />

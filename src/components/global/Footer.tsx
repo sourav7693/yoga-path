@@ -11,14 +11,21 @@ import {
 } from "react-icons/fa";
 
 import WhatsappFooter from "@/components/SvgIcon/Whatsapp";
-import { IoLogoInstagram } from "react-icons/io";
+import { FaInstagram, FaYoutube, FaFacebook } from "react-icons/fa";
+
+const socialLinks = [
+  
+  { icon: FaInstagram, href: "https://www.instagram.com/yoga_withpayel/" },
+  { icon: FaYoutube, href: "https://www.youtube.com/@TheYogaPathByPayel" },
+  { icon: FaFacebook, href: "https://www.facebook.com/profile.php?id=61582788553108#" },
+];
 
 const quickLinks = [
   { label: "» Home", href: "/" },
-  { label: "» About Us", href: "#about" },
-  { label: "» Our Sucess", href: "#sucess" },
-  { label: "» Why us", href: "#whyus" },
-  { label: "» Pricing", href: "#pricing" },
+  { label: "» About Us", href: "/about" },
+  { label: "» Our Courses", href: "/course" },
+  { label: "» Media", href: "/media" },
+  { label: "» Contact", href: "/contact" },
 ];
 
 const quickLinks2 = [
@@ -76,129 +83,10 @@ export default function Footer() {
 
       {/* TOP CTA */}
 
-      {/* MAIN FOOTER */}
-      <div className="relative z-10">
-        <div className="mx-auto max-w-[1300px] px-4 py-4 md:py-12 text-gray-300">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
-            {/* ABOUT */}
-            <div className="lg:col-span-4">
-              <Link href="/">
-                <Image
-                  src={"/assets/logo/Yoga Path Logo white text (1).png"}
-                  alt="logo"
-                  width={1804}
-                  height={599}
-                  priority
-                  className="h-[8rem] w-fit"
-                />
-              </Link>
-              <p className="mt-4 text-[16px] leading-relaxed text-white">
-                The Yoga Path provides affordable and accessible online yoga
-                classes designed for all age groups. Join our live sessions via
-                Google Meet with easy WhatsApp access and start your wellness
-                journey from the comfort of your home. Based in Ghogomali,
-                Siliguri, West Bengal – 734006.
-              </p>
-            </div>
-
-            {/* LINKS 1 */}
-            <div className="lg:col-span-2">
-              <h4 className="mb-4 font-semibold text-white text-[22px]">
-                Quick Link
-              </h4>
-              <ul className="space-y-3 text-[17px]">
-                {quickLinks.map((link) => (
-                  <li key={link.label} className="flex items-center gap-2">
-                    <Link
-                      href={link.href}
-                      className="hover:text-defined-red  text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* LINKS 2 */}
-            <div className="lg:col-span-2">
-              <h4 className="mb-4 font-semibold text-white text-[22px]">
-                Quick Link
-              </h4>
-              <ul className="space-y-3 text-[17px]">
-                {quickLinks2.map((link) => (
-                  <li key={link.label} className="flex items-center gap-2">
-                    {/* <FaCheck size={14} /> */}
-                    <Link
-                      href={link.href}
-                      className="hover:text-defined-red text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* LINKS 3 */}
-
-            {/* CONTACT */}
-            <div className="lg:col-span-4">
-              <h4 className="mb-4 font-semibold text-white text-[22px]">
-                Contact Information
-              </h4>
-              <ul className="space-y-3 text-[17px]">
-                <li className="flex items-start gap-2 text-white">
-                  <FaMapMarkerAlt size={20} className="text-white " />
-                  <Link
-                    href="https://maps.app.goo.gl/EwwTNkuAqEUeQhwc9"
-                    target="_blank"
-                  >
-                    Ghogomali, Siliguri, West Bengal – 734006.
-                  </Link>
-                </li>
-                <li className="flex items-center gap-2 text-white">
-                  <FaPhoneAlt size={16} className="text-white" />
-                  <Link href="tel:+917908623983">Call Us: +91 79086 23983</Link>
-                </li>
-
-                <li className="flex items-center gap-2 text-white">
-                  <FaEnvelope size={16} className="text-white" />
-                  <Link href="mailto:theyogapath@gmail.com">
-                    theyogapath@gmail.com
-                  </Link>
-                </li>
-                <li className="flex items-center gap-2 text-white">
-                  <IoLogoInstagram size={20} className="text-white" />
-                  <Link
-                    href="https://www.instagram.com/theyogapath_bypayel"
-                    target="_blank"
-                    className="underline"
-                  >
-                    theyogapath_bypayel
-                  </Link>
-                </li>
-              </ul>
-              <div className="w-full h-[100px] border border-gray-200 mt-2 rounded-[4px]">
-                <iframe
-                  title="Google Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14255.221916852694!2d88.44118175475909!3d26.71866062821051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e441bd69bc232b%3A0xe14ccb38a039f2de!2sGhogomali%2C%20Siliguri%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1771931926524!5m2!1sen!2sin"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, borderRadius: "4px" }}
-                  loading="lazy"
-                  allowFullScreen
-                ></iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* BOTTOM BAR */}
 
-      <div className="relative z-10 pb-6">
-        <div className="mx-auto max-w-[1300px] px-4">
+      <div className="relative z-10 py-10">
+        <div className="mx-auto max-w-[1320px] px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/5 backdrop-blur-md px-6 py-4">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7
@@ -230,6 +118,178 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* MAIN FOOTER */}
+      <div className="relative z-10">
+        <div className="mx-auto max-w-[1320px] px-4 py-4 md:py-8 text-gray-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
+            {/* ABOUT */}
+            <div className="lg:col-span-4">
+              {/* <Link href="/">
+                <Image
+                  src={"/assets/logo/Yoga Path Logo white text (1).png"}
+                  alt="logo"
+                  width={1804}
+                  height={599}
+                  priority
+                  className="h-[8rem] w-fit"
+                />
+              </Link> */}
+              <p className="mt-4 text-[16px] leading-relaxed text-white text-justify">
+                The Yoga Path provides affordable and accessible online yoga
+                classes designed for all age groups. Join our live sessions via
+                Google Meet with easy WhatsApp access and start your wellness
+                journey from the comfort of your home. Based in Ghogomali,
+                Siliguri, West Bengal – 734006.
+              </p>
+            </div>
+
+            {/* LINKS 1 */}
+            <div className="lg:col-span-2">
+              <h4 className="mb-4 font-semibold text-white text-[22px]">
+                Quick Link
+              </h4>
+              <ul className="space-y-3 text-[17px]">
+                {quickLinks.map((link) => (
+                  <li key={link.label} className="flex items-center gap-2 font-normal">
+                    <Link
+                      href={link.href}
+                      className="hover:text-defined-purple  text-white "
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* LINKS 2 */}
+            <div className="lg:col-span-2">
+              <h4 className="mb-4 font-semibold text-white text-[22px]">
+                Quick Link
+              </h4>
+              <ul className="space-y-3 text-[17px]">
+                {quickLinks2.map((link) => (
+                  <li key={link.label} className="flex items-center gap-2">
+                    {/* <FaCheck size={14} /> */}
+                    <Link
+                      href={link.href}
+                      className="hover:text-defined-purple text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* LINKS 3 */}
+
+            {/* CONTACT */}
+            <div className="lg:col-span-4">
+              <h4 className="mb-4 font-semibold text-white text-[22px]">
+                Contact Information
+              </h4>
+              <ul className="space-y-3 text-[17px]">
+                <li className="flex items-start gap-2 text-white">
+                  <FaMapMarkerAlt size={20} className="text-white " />
+                  <Link
+                    href="https://maps.app.goo.gl/EwwTNkuAqEUeQhwc9"
+                    target="_blank"
+                  >
+                    Ghogomali Main Road, Ghogomali,<br></br> Siliguri, WB 734006
+                  </Link>
+                </li>
+                <li className="flex items-center gap-2 text-white">
+                  <FaPhoneAlt size={16} className="text-white" />
+                  <Link href="tel:+917908623983">Call Us: +91 79086 23983</Link>
+                </li>
+
+                <li className="flex items-center gap-2 text-white">
+                  <FaEnvelope size={16} className="text-white" />
+                  <Link href="mailto:yogapathbypayel@gmail.com">
+                    yogapathbypayel@gmail.com
+                  </Link>
+                </li>
+                {/* <li className="flex items-center gap-2 text-white">
+                  <IoLogoInstagram size={20} className="text-white" />
+                  <Link
+                    href="https://www.instagram.com/theyogapath_bypayel"
+                    target="_blank"
+                    className="underline"
+                  >
+                    theyogapath_bypayel
+                  </Link>
+                </li> */}
+              </ul>
+              <div className="w-full h-[150px]  mt-2 rounded-[4px]">
+                <iframe
+                  title="Google Map"
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2333.2877754057795!2d88.45184517840539!3d26.714181567510888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDQyJzUwLjgiTiA4OMKwMjcnMDMuOSJF!5e0!3m2!1sen!2sin!4v1775049788038!5m2!1sen!2sin"
+                  width="75%"
+                  height="100%"
+                  style={{ border: 0, borderRadius: "4px" }}
+                  loading="lazy"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+       <div className="mx-auto max-w-[1320px] px-4 py-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded bg-white/10 backdrop-blur-md px-6 py-4">
+          <div className="flex items-center gap-3">
+            <p className="text-white text-sm whitespace-nowrap">We Accept</p>
+
+            <div className="flex items-center gap-2">
+              {[
+                "/assets/globals/visa.png",
+                "/assets/globals/mastercard.png",
+                "/assets/globals/rupay.png",
+                "/assets/globals/upi.png",
+              ].map((src) => (
+                <div
+                  key={src}
+                  className="flex items-center justify-center rounded bg-white px-1 py-1"
+                >
+                  <Image
+                    src={src}
+                    alt="payment"
+                    width={40}
+                    height={26}
+                    className="h-6 w-auto object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+            
+          </div>
+
+          <p className="text-white text-sm text-center md:pr-[100px]">
+            © The Yoga Path – 2026 | All Right Reserved
+          </p>
+
+          <div className="flex gap-4">
+            {socialLinks.map(({ icon: Icon, href }, i) => (
+              <Link
+                key={i}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition">
+                  <Icon size={20} className="text-defined-purple" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      
+
       {/* CREDIT */}
       <div
         className="relative z-10 py-4 
@@ -238,13 +298,13 @@ export default function Footer() {
                 md:items-center 
                 md:justify-between 
                 text-gray-400 
-                max-w-[1300px] mx-auto px-4"
+                max-w-[1320px] mx-auto px-4"
       >
         {/* 1st Column */}
         <div className="w-full text-center md:text-left">
           <span className="text-[16px]">
             ©{" "}
-            <Link href="/" className="text-defined-red font-bold">
+            <Link href="/" className="text-defined-purple font-bold">
               The Yoga Path
             </Link>{" "}
             - 2026 All rights reserved.
