@@ -196,7 +196,7 @@ export default function Footer() {
                     href="https://maps.app.goo.gl/EwwTNkuAqEUeQhwc9"
                     target="_blank"
                   >
-                    Ghogomali Main Road, Ghogomali,<br></br> Siliguri, WB 734006
+                    Ground Floor, Niranjan Nagar Ghogomali, Ghogomali Main Road  WB 734006
                   </Link>
                 </li>
                 <li className="flex items-center gap-2 text-white">
