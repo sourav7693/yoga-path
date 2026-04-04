@@ -88,7 +88,7 @@ export default function ContactSection() {
                   <div>
                     <p className="text-sm text-gray-500">Location</p>
                     <p className="font-semibold">
-                      Ghogomali Main Road, Ghogomali, Siliguri, WB 734006
+                      Ground Floor, Niranjan Nagar Ghogomali, Ghogomali Main Road  WB 734006
                     </p>
                   </div>
                 </div>
