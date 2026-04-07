@@ -90,6 +90,11 @@ export default function FormModal({
     verifyLeadOtp,
     null,
   );
+
+  const [selectedCoursePrice, setSelectedCoursePrice] = useState<{
+  mrp: number;
+  offer?: number;
+} | null>(null);
   const [enrolledCourses, setEnrolledCourses] = useState<string[]>([]);
   const [enrollState, enrollAction, enrollPending] = useActionState(
     async (prev: any, formData: FormData) => {
@@ -472,6 +477,15 @@ export default function FormModal({
                 name="courseId"
                  defaultValue={defaultCourseId} 
                 required
+                 onChange={(e) => {
+    const course = courses.find((c) => c.courseId === e.target.value);
+    if (course) {
+      setSelectedCoursePrice({
+        mrp: course.courseMRP,
+        offer: course.offerPrice,
+      });
+    }
+  }}
                 className={`${inputClass} rounded-tl-[10px] rounded-tr-[10px]`}
               >
                 <option value="" disabled className="text-black">
@@ -492,6 +506,28 @@ export default function FormModal({
                   );
                 })}
               </select>
+
+              {selectedCoursePrice && (
+  <div className="flex items-center gap-3 px-4 py-3 bg-white/10 border border-white/20">
+    {selectedCoursePrice.offer ? (
+      <>
+        <span className="text-white/50 line-through text-sm">
+          ₹{selectedCoursePrice.mrp}
+        </span>
+        <span className="text-green-400 font-bold text-lg">
+          ₹{selectedCoursePrice.offer}
+        </span>
+        <span className="text-xs text-green-300 bg-green-500/20 px-2 py-0.5 rounded-full">
+          {Math.round(((selectedCoursePrice.mrp - selectedCoursePrice.offer) / selectedCoursePrice.mrp) * 100)}% OFF
+        </span>
+      </>
+    ) : (
+      <span className="text-white font-bold text-lg">
+        ₹{selectedCoursePrice.mrp}
+      </span>
+    )}
+  </div>
+)}
 
               <input
                 type="text"
