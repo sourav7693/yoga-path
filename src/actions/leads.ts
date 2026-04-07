@@ -56,7 +56,7 @@ export async function sendLeadOtp(prevData: unknown, formData: FormData) {
     template_id: process.env.WA_TEMPLATE_ID,
     device_id: process.env.WA_DEVICE_ID,
     language: "en",
-    variables: [otp, "7044076603"],
+    variables: [otp],
   };
 
   try {
@@ -247,6 +247,27 @@ export async function verifyRazorpaySignature(
   }
 }
 
+
+export async function sendPaymentFailedMessage(mobile: string) {
+  mobile = mobile.startsWith("91") ? mobile : "91" + mobile;
+
+  const payload = {
+    "auth-key": process.env.WA_AUTH_KEY,
+    "app-key": process.env.WA_APP_KEY,
+    destination_number: mobile,
+    template_id: "2492469401176709",
+    device_id: process.env.WA_DEVICE_ID,
+    language: "en",
+    variables: [], 
+  };
+
+  try {
+    await axios.post("https://web.wabridge.com/api/createmessage", payload);
+  } catch (err: any) {
+    console.error("Payment failed WA send error:", err?.response?.data || err.message);
+  }
+}
+
 export async function completeEnrollment(prev: unknown, formData: FormData) {
   try {
     await connectDb();
@@ -365,22 +386,22 @@ export async function completeEnrollment(prev: unknown, formData: FormData) {
     await lead.save();
     await course.save();
 
-    console.log("WA variables", [
-      sessionTime,
-      course.meetingDuration?.toString() || "",
-      meetingLink,
-    ]);
 
-    const payload = {
-      "auth-key": process.env.WA_AUTH_KEY,
-      "app-key": process.env.WA_APP_KEY,
-      destination_number: mobile,
-      template_id: process.env.WA_ENROLL_TEMPLATE_ID,
-      device_id: process.env.WA_DEVICE_ID,
-      language: "en",
-      variables: [sessionTime,  course.meetingDuration?.toString() || "", meetingLink],
-    };
 
+const payload = {
+  "auth-key": process.env.WA_AUTH_KEY,
+  "app-key": process.env.WA_APP_KEY,
+  destination_number: mobile,
+  template_id: "793282956806480",
+  device_id: process.env.WA_DEVICE_ID,
+  language: "en",
+  variables: [
+    course.courseName || "",           // {{1}} course name
+    sessionTime,                        // {{2}} time
+    course.meetingDuration?.toString() || "", // {{3}} duration
+    meetingLink,                        // {{4}} join link
+  ],
+};
  try {
    const res = await axios.post(
      "https://web.wabridge.com/api/createmessage",

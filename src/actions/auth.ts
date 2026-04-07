@@ -149,10 +149,10 @@ export async function sendWhatsappOtp(formData: FormData) {
     "auth-key": process.env.WA_AUTH_KEY,
     "app-key": process.env.WA_APP_KEY,
     destination_number: formattedMobile,
-    template_id: process.env.WA_TEMPLATE_ID,
+    template_id: "943018612020535",
     device_id: process.env.WA_DEVICE_ID,
     language: "en",
-    variables: [otp, "7044076603"],
+    variables: [otp],
   };
 
   try {

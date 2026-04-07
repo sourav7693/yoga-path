@@ -26,7 +26,7 @@ export default function TransparentHeader() {
                 width={1804}
                 height={299}
                 priority
-                className="h-[5rem] md:h-[7rem] xl:h-[9rem] w-fit"
+                className="h-[5rem] md:h-[7rem] xl:h-[9rem] w-auto object-contain"
               />
             </Link>
           </div>

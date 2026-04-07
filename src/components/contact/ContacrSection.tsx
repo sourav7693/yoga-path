@@ -103,7 +103,7 @@ export default function ContactSection() {
                     for Test Booking Assistance.
                   </h3>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <input
                       type="text"
@@ -111,7 +111,7 @@ export default function ContactSection() {
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Enter your name"
-                      className="border border-gray-300 rounded-lg p-3 outline-none"
+                      className="border border-gray-300 rounded-lg p-3 outline-none w-full"
                     />
 
                     <input
@@ -120,7 +120,7 @@ export default function ContactSection() {
                       value={form.mobile}
                       onChange={handleChange}
                       placeholder="Enter your mobile number"
-                      className="border border-gray-300 rounded-lg p-3 outline-none"
+                      className="border border-gray-300 rounded-lg p-3 outline-none w-full"
                     />
 
                     <input
@@ -129,7 +129,7 @@ export default function ContactSection() {
                       value={form.email}
                       onChange={handleChange}
                       placeholder="Enter Your Email address"
-                      className="border border-gray-300 rounded-lg p-3 outline-none"
+                      className="border border-gray-300 rounded-lg p-3 outline-none w-full"
                     />
 
                     <input
@@ -137,13 +137,13 @@ export default function ContactSection() {
                       value={form.message}
                       onChange={handleChange}
                       placeholder="Message"
-                      className="border border-gray-300 rounded-lg p-3 outline-none"
+                      className="border border-gray-300 rounded-lg p-3 outline-none w-full"
                     />
 
                     <button
                       type="button"
                       onClick={handleWhatsapp}
-                      className="bg-green-500 hover:bg-green-600 transition text-white rounded-lg p-3 font-medium col-span-2 flex items-center justify-center gap-2"
+                      className="bg-green-500 hover:bg-green-600 transition text-white rounded-lg p-3 font-medium col-span-1 md:col-span-2 flex items-center justify-center gap-2"
                     >
                       <FaWhatsapp size={20} />
                       Send via WhatsApp

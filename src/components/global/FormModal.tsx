@@ -7,6 +7,7 @@ import {
   createPaymentOrder,
   verifyRazorpaySignature,
   completeEnrollment,
+  sendPaymentFailedMessage,
 } from "@/actions/leads";
 import { useEffect, useState, useActionState, startTransition } from "react";
 import { toast } from "react-toastify";
@@ -277,7 +278,8 @@ export default function FormModal({
 
         //ts-ignore
         modal: {
-          ondismiss: () => {
+          ondismiss: async () => {
+            await sendPaymentFailedMessage(formData.mobile);
             router.push("/payment-error?reason=cancelled");
             onClose?.();
           },
