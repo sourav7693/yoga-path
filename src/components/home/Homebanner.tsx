@@ -46,7 +46,7 @@ useEffect(() => {
         <div className="absolute inset-0 z-0">
           <video ref={desktopVideoRef} {...videoProps}>
             <source
-              src="https://res.cloudinary.com/dqwnmpul2/video/upload/q_auto/v1775566145/theyogapath-herovideo_n3daku.mp4"
+              src="https://res.cloudinary.com/dqwnmpul2/video/upload/vc_h264,q_auto/v1775566145/theyogapath-herovideo_n3daku.mp4"
               type="video/mp4"
             />
           </video>
@@ -70,7 +70,7 @@ useEffect(() => {
         <div className="relative w-full h-[60vh] z-0">
           <video ref={mobileVideoRef} {...videoProps}>
             <source
-              src="https://res.cloudinary.com/dqwnmpul2/video/upload/q_auto/v1775566145/theyogapath-herovideo_n3daku.mp4"
+              src="https://res.cloudinary.com/dqwnmpul2/video/upload/vc_h264,q_auto/v1775566145/theyogapath-herovideo_n3daku.mp4"
               type="video/mp4"
             />
           </video>
