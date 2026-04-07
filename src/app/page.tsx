@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 
 
 export default async function Home() {
-  const [courseResult, reelsResult, galleryResult] = await Promise.all([getAllCourses(1,0), getReels(1,0), getGallery(1,0)]);  
+  const [courseResult, reelsResult, galleryResult] = await Promise.all([getAllCourses(1,0), getReels(1,0), getGallery(1,12)]);  
   const courses = courseResult.data;
   const reels = reelsResult.data;
   const gallery = galleryResult.data;

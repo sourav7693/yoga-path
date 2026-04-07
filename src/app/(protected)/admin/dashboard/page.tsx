@@ -83,170 +83,159 @@ const page = async () => {
 
   return (
     <section className="flex flex-col gap-6">
+      {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg p-6 flex flex-col gap-6 rounded-2xl shadow-xl"
+            className="bg-white p-6 flex flex-col gap-6 rounded-2xl shadow-sm border border-gray-100 transition-all hover:shadow-md"
           >
             <div className="flex justify-between">
-              <span className="bg-defined-red/10 rounded-xl p-2">
+              <span className="bg-defined-red/10 rounded-xl p-3 flex items-center justify-center">
                 {card.icon}
-              </span>{" "}
-              <span className="text-green-500 bg-green-500/10 p-2 rounded-xl flex gap-2 justify-center items-center">
-                <FaChartLine className="inline text-sm" />
-                {card.increase}
+              </span>
+              <span className="text-green-600 bg-green-500/10 px-3 py-1 rounded-xl flex gap-2 justify-center items-center text-sm font-medium">
+                <FaChartLine className="inline" />
+                {card.increase}%
               </span>
             </div>
-            <div className="flex flex-col justify-between">
-              <p className="text-lg text-defined-brown font-semibold">
-                {card.label}
-              </p>
-              <p className="text-2xl text-defined-black font-extrabold">
-                {card.value}
-              </p>
+            <div className="flex flex-col gap-1">
+              <p className="text-sm text-gray-500 font-medium">{card.label}</p>
+              <p className="text-2xl text-gray-800 font-bold">{card.value}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex items-center justify-between gap-4 text-defined-black">
-        <div className="bg-white gap-2 flex flex-col flex-1 rounded-xl p-4 w-full shadow-2xl">
-          <div className="flex justify-between">
-            <p>Recent Courses</p>
+      {/* Tables Section - Uses flex-col on small screens, xl:flex-row for side-by-side on very large screens */}
+      <div className="flex flex-col xl:flex-row gap-6 w-full">
+        
+        {/* Recent Courses Div Table */}
+        <div className="bg-white flex flex-col xl:w-[50%] rounded-2xl p-5 w-full shadow-sm border border-gray-100">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-800">Recent Courses</h2>
             <Link
               href="/admin/manage-course"
-              className="underline text-defined-red"
+              className="text-sm text-defined-red hover:text-red-700 font-medium"
             >
-              View All
+              View All &rarr;
             </Link>
           </div>
-          <div className="bg-white rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
-            <table className="w-full">
-              <thead className="h-16 bg-gray-200">
-                <tr>
-                  <th className="text-left pl-4">Course</th>
-                  <th>Category</th>
-                  <th>Standard Price</th>
-                  <th>Offer Price</th>
-                  <th>Students Enrolled</th>
-                  {/* <th>Status</th>
-                        <th>Duration</th>
-                        <th>Actions</th> */}
-                </tr>
-              </thead>
-
-              <tbody>
-                {recentCourses.map((course) => (
-                  <tr
-                    key={course.courseId}
-                    className=" border-b border-gray-200 text-center last:border-none bg-gray-100"
-                  >
-                    <td className="text-left line-clamp-1 py-1">
-                      {course.courseName}
-                    </td>
-
-                    <td>{course.category}</td>
-
-                    <td className="line-through text-defined-brown">
-                      ₹{course.courseMRP}
-                    </td>
-
-                    <td className="text-defined-red">
-                      ₹{course.offerPrice}
-                    </td>
-
-                    <td>{course.students?.length || 0}</td>
-                    {/* <td>{course.status}</td>
           
-                          <td>{course.days}</td> */}
+          <div className="rounded-xl border border-gray-200 overflow-hidden h-[calc(100vh-400px)] flex flex-col relative">
+            <div className="overflow-x-auto overflow-y-auto no-scrollbar h-full">
+              <div className="min-w-[600px] flex flex-col w-full">
+                {/* Table Header */}
+                <div className="flex w-full bg-gray-50 text-gray-500 text-[11px] uppercase font-bold tracking-wider sticky top-0 z-10 border-b border-gray-200">
+                  <div className="flex-[3] p-3 pl-4 text-left">Course</div>
+                  <div className="flex-1 p-3 text-left">Category</div>
+                  <div className="flex-1 p-3 text-right">Standard Price</div>
+                  <div className="flex-1 p-3 text-right">Offer Price</div>
+                  <div className="flex-1 p-3 text-center">Enrolled</div>
+                </div>
 
-                    {/* <td>
-                            <span className="flex items-center justify-center gap-4">
-                              <FaEye
-                                onClick={() => openView(course)}
-                                className="cursor-pointer text-defined-blue"
-                              />
-          
-                              <FiEdit3
-                                onClick={() => openEdit(course)}
-                                className="cursor-pointer text-defined-blue"
-                              />
-          
-                              <MdDelete
-                                onClick={() => openDelete(course)}
-                                className="cursor-pointer text-defined-red"
-                              />
-                            </span>
-                          </td> */}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                {/* Table Body */}
+                <div className="flex flex-col w-full">
+                  {recentCourses.map((course) => (
+                    <div
+                      key={course.courseId}
+                      className="flex w-full border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors items-center text-xs"
+                    >
+                      {/* Flex-[2] gives this column twice the width of flex-1 columns */}
+                      <div className="flex-[3] p-3 pl-4 text-left  text-gray-800 pr-4">
+                        <span className="line-clamp-2 leading-tight">{course.courseName}</span>
+                      </div>
+                      <div className="flex-1 p-3 text-left text-gray-600">
+                        {course.category}
+                      </div>
+                      <div className="flex-1 p-3 text-right text-gray-400 line-through">
+                        ₹{course.courseMRP}
+                      </div>
+                      <div className="flex-1 p-3 text-right text-defined-red font-medium">
+                        ₹{course.offerPrice}
+                      </div>
+                      <div className="flex-1 p-3 text-center text-gray-600 font-medium">
+                        {course.students?.length || 0}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="bg-white gap-2 flex flex-col flex-1 rounded-xl p-4 w-full">
-          <div className="flex justify-between">
-            <p>Recent Leads</p>
+
+        {/* Recent Leads Div Table */}
+        <div className="bg-white flex flex-col xl:w-[50%] rounded-2xl p-5 w-full shadow-sm border border-gray-100">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-800">Recent Leads</h2>
             <Link
               href="/admin/manage-leads"
-              className="underline text-defined-red"
+              className="text-sm text-defined-red hover:text-red-700 font-medium"
             >
-              View All
+              View All &rarr;
             </Link>
           </div>
-          <div className="bg-white rounded-xl shadow h-[calc(100vh-400px)] overflow-y-scroll no-scrollbar">
-            <table className="w-full">
-              <thead className="h-16 bg-gray-200">
-                <tr>
-                  {/* <th>Lead ID</th> */}
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  {/* <th>Email</th> */}
-                  <th>Courses</th>
-                  <th>Enrollment Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+          
+          <div className="rounded-xl border border-gray-200 overflow-hidden h-[calc(100vh-400px)] flex flex-col relative">
+            <div className="overflow-x-auto overflow-y-auto no-scrollbar h-full">
+              <div className="min-w-[700px] flex flex-col w-full">
+                {/* Table Header */}
+                <div className="flex w-full bg-gray-50 text-gray-500 text-[11px] uppercase font-bold tracking-wider sticky top-0 z-10 border-b border-gray-200">
+                  <div className="flex-[1.5] p-3 pl-4 text-left">Name</div>
+                  <div className="flex-1 p-3 text-left">Mobile</div>
+                  <div className="flex-[2] p-3 text-left">Courses</div>
+                  <div className="flex-1 p-3 text-center">Enroll Date</div>
+                  <div className="flex-1 p-3 text-center">Status</div>
+                </div>
 
-              <tbody>
-                {rows.map(({ lead, enroll }, index) => (
-                  <tr
-                    key={enroll?._id || `${lead.leadId}-${index}`}
-                    className="border-b border-gray-200 text-center bg-gray-100 text-sm"
-                  >
-                    {/* <td className="p-3 font-semibold">{lead.leadId}</td> */}
-                    <td className="text-left py-2">{lead.name}</td>
-                    <td>{lead.mobile.split("91")[1]}</td>
-                    {/* <td>{lead.email || "-"}</td> */}
-
-                    <td>{enroll?.course?.courseName || "No course"}</td>
-
-                    <td>
-                      {enroll?.enrolledAt
-                        ? new Date(enroll.enrolledAt).toLocaleDateString()
-                        : "-"}
-                    </td>
-
-                    <td>
-                      <span
-                        className={`px-2 py-1 rounded-full text-sm ${
-                          enroll?.status === "Enrolled"
-                            ? "bg-green-100 text-green-700"
-                            : enroll?.status === "Pending"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {enroll?.status || "Lost"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                {/* Table Body */}
+                <div className="flex flex-col w-full">
+                  {rows.map(({ lead, enroll }, index) => (
+                    <div
+                      key={enroll?._id || `${lead.leadId}-${index}`}
+                      className="flex w-full border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors items-center text-xs"
+                    >
+                      <div className="flex-[1.5] p-3 pl-4 text-left  text-gray-800 truncate pr-2">
+                        {lead.name}
+                      </div>
+                      <div className="flex-1 p-3 text-left text-gray-600">
+                        {lead.mobile.split("91")[1] || lead.mobile}
+                      </div>
+                      {/* Flex-[2] for courses as names can be long */}
+                      <div className="flex-[2] p-3 text-left text-gray-600 pr-4">
+                        <span className="line-clamp-2 text-xs leading-tight">
+                          {enroll?.course?.courseName || "No course"}
+                        </span>
+                      </div>
+                      <div className="flex-1 p-3 text-center text-gray-500 text-xs">
+                        {enroll?.enrolledAt
+                          ? new Date(enroll.enrolledAt).toLocaleDateString('en-IN', {
+                              day: '2-digit', month: 'short', year: 'numeric'
+                            })
+                          : "-"}
+                      </div>
+                      <div className="flex-1 p-3 flex justify-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide ${
+                            enroll?.status === "Enrolled"
+                              ? "bg-green-100 text-green-700 border border-green-200"
+                              : enroll?.status === "Pending"
+                              ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+                              : "bg-red-100 text-red-700 border border-red-200"
+                          }`}
+                        >
+                          {enroll?.status || "Lost"}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );

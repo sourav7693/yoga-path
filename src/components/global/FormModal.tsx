@@ -153,6 +153,16 @@ export default function FormModal({
     };
   }, [onClose]);
 
+
+  useEffect(() => {
+  if (defaultCourseId) {
+    const course = courses.find((c) => c.courseId === defaultCourseId);
+    if (course) {
+      setSelectedCoursePrice({ mrp: course.courseMRP, offer: course.offerPrice });
+    }
+  }
+}, [defaultCourseId]);
+
   useEffect(() => {
     if (mode === "modal") {
       document.body.style.overflow = "hidden";

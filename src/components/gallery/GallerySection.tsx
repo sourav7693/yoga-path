@@ -5,18 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { GalleryDocument } from "@/models/Gallery";
 
-const images = [
-
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-  "/assets/new-img/offering.png",
-];
-
 export default function GallerySection({gallery} : {gallery: GalleryDocument[]}) {
   return (
     <section className="w-full py-4 lg:py-12 px-4 bg-white">

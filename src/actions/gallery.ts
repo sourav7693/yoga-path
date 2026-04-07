@@ -64,7 +64,7 @@ export async function createGallery(prev: unknown, formData: FormData) {
 
 export async function getGallery(
   page: number | string = 1,
-  limit: number | string = 10,
+  limit: number | string = 12,
   sort: string = "createdAt",
   order: "asc" | "desc" = "desc",
   searchQuery?: string,
