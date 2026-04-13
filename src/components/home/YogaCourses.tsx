@@ -56,7 +56,7 @@ const YogaCourses = ({ courses }: { courses: CourseDoc[] }) => {
                   onClick={() => setOpenForm(true)}
                   className="flex-1 bg-gradient-to-r from-[#AD46FF] to-purple-600 text-white rounded-full py-3 text-sm font-medium shadow-md hover:opacity-90 transition"
                 >
-                  Start Journey →
+                  Book Classes →
                 </button>
               </div>
             </div>

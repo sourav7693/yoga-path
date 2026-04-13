@@ -51,7 +51,7 @@ export default function CoursesClient({ courses }: { courses: any[] }) {
                   onClick={() => setOpenForm(true)}
                   className="flex-1 bg-gradient-to-r from-[#AD46FF] to-purple-600 text-white rounded-full py-3 text-sm font-medium"
                 >
-                  Start Journey →
+                  Book Class →
                 </button>
               </div>
             </div>
