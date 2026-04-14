@@ -32,13 +32,13 @@ export default function PricingSection({courses} : {courses : CourseDoc[]}) {
           </p>
 
           <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-            Regular Price : ₹999/-
+            Regular Price : <span className="text-[#ffc300] line-through text-semibold text-[24px] pr-2">1199 </span> ₹999/-
           </h3>
 
           {/* Today's Price Box */}
           <div className="inline-block bg-white rounded-xl px-6 py-3 mt-6 shadow-md">
             <h3 className="text-2xl md:text-3xl font-bold">
-              Courses Starting From Just ₹799/-
+              Courses Starting From Just <span className="text-[#ffc300] line-through text-semibold text-[24px] pr-2">1199</span>₹799/-
             </h3>
           </div>
 

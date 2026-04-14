@@ -76,7 +76,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative w-full bg-cover bg-center pb-25 "
+      className="relative w-full bg-cover bg-center pb-30 "
       style={{ backgroundImage: "url('/assets/home/footerbg (1).avif')" }}
     >
       {/* <div className="absolute inset-0 bg-black/95" /> */}

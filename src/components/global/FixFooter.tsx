@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import FormModal from "./FormModal";
 import { CourseDoc } from "@/models/Course";
 
-export default function FixFooter({courses} : {courses : CourseDoc[]}) {
+export default function FixFooter({ courses }: { courses: CourseDoc[] }) {
   const [timeLeft, setTimeLeft] = useState(15 * 60);
   const [openForm, setOpenForm] = useState(false);
 
@@ -33,10 +33,10 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
           {/* Row 1 - Simple Text */}
           <div className="flex justify-center items-center text-sm text-white text-center">
             <span className="text-gray-800">
-              Offer Will expire in {" "}
+              Offer Will expire in{" "}
               <span className="font-semibold text-gray-800">
-                {String(minutes).padStart(2, "0")}{" "} min{" "}
-                {String(seconds).padStart(2, "0")}{" "} sec.
+                {String(minutes).padStart(2, "0")} min{" "}
+                {String(seconds).padStart(2, "0")} sec.
               </span>
             </span>
           </div>
@@ -54,14 +54,20 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
         <div className="hidden md:flex items-center justify-between gap-2">
           {/* LEFT SIDE */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center">
-              <span className="text-5xl font-bold text-defined-red pt-4">
+            <div className="flex flex-col items-start">
+              {/* Original Price (cut in middle) */}
+              <span className=" text-[#ffc300] line-through text-semibold text-[24px]">
+                ₹1199
+              </span>
+
+              {/* Discounted Price */}
+              <span className="text-5xl font-bold text-defined-red pt-0">
                 ₹799
               </span>
             </div>
 
             <div className="text-left">
-              <p className="text-[8px] text-gray-300 pb-2">Offer Ends in</p>
+              <p className="text-[10px] text-gray-300 pb-2">Offer Ends in</p>
 
               <div className="font-semibold text-white mt-1">
                 <span className="p-2 bg-gray-600 rounded text-[22px]">
@@ -79,12 +85,23 @@ export default function FixFooter({courses} : {courses : CourseDoc[]}) {
             onClick={() => setOpenForm(true)}
             className="animated-glow-btn text-xl"
           >
-            REGISTER NOW AT ₹799/- ONLY
+            REGISTER NOW AT{" "}
+            <span className="text-[#ffc300] line-through text-semibold text-[24px] pr-1">
+              {" "}
+              1199
+            </span>{" "}
+            ₹799/- ONLY
           </button>
         </div>
       </div>
 
-      {openForm && <FormModal mode="modal" onClose={() => setOpenForm(false)} courses={courses} />}
+      {openForm && (
+        <FormModal
+          mode="modal"
+          onClose={() => setOpenForm(false)}
+          courses={courses}
+        />
+      )}
     </div>
   );
 }
