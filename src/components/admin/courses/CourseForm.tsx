@@ -32,6 +32,7 @@ export default function CourseForm({
   const [preview, setPreview] = useState<string | null>(null);
   const [metaTitle, setMetaTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
+  const [offerPrice, setOfferPrice] = useState<number>(0);
 
   const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
 
@@ -85,7 +86,35 @@ export default function CourseForm({
     setPreview(url);
   };
 
-  const offerPrice = mrp - (mrp * discount) / 100;
+  const handleMrpChange = (value: number) => {
+  setMrp(value);
+
+  if (discount > 0) {
+    const newOffer = value - (value * discount) / 100;
+    setOfferPrice(Math.round(newOffer));
+  } else if (offerPrice > 0 && value > 0) {
+    const newDiscount = ((value - offerPrice) / value) * 100;
+    setDiscount(Math.floor(newDiscount));
+  }
+};
+
+const handleDiscountChange = (value: number) => {
+  setDiscount(value);
+
+  if (mrp > 0) {
+    const newOffer = mrp - (mrp * value) / 100;
+    setOfferPrice(Math.round(newOffer));
+  }
+};
+
+const handleOfferPriceChange = (value: number) => {
+  setOfferPrice(value);
+
+  if (mrp > 0) {
+    const newDiscount = ((mrp - value) / mrp) * 100;
+    setDiscount(Math.floor(newDiscount));
+  }
+};
 
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
@@ -129,6 +158,7 @@ export default function CourseForm({
         ? new Date(course.endDate).toISOString().split("T")[0]
         : "",
     );
+   setOfferPrice(Math.round(course.offerPrice || 0));
     setPreview(course.thumbnail?.secure_url || null);
     if (course.faqs && course.faqs.length > 0) {
       setFaqs(course.faqs);
@@ -340,13 +370,11 @@ export default function CourseForm({
                   Course Price (₹)
                 </label>
                 <input
-                  type="text"
-                  onKeyDown={allowOnlyNumbers}
-                  name="courseMRP"
-                  placeholder="Course MRP"
-                  value={mrp}
-                  min={0}
-                  onChange={(e) => setMrp(Number(e.target.value))}
+                 type="text"
+  onKeyDown={allowOnlyNumbers}
+  name="courseMRP"
+  value={mrp}
+  onChange={(e) => handleMrpChange(Number(e.target.value))}
                   className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none focus:ring ring-defined-red"
                 />
               </div>
@@ -358,13 +386,11 @@ export default function CourseForm({
                   Discount Price (%)
                 </label>
                 <input
-                  type="text"
-                  onKeyDown={allowOnlyNumbers}
-                  name="discount"
-                  placeholder="Discount %"
-                  value={discount}
-                  min={0}
-                  onChange={(e) => setDiscount(Number(e.target.value))}
+                   type="text"
+  onKeyDown={allowOnlyNumbers}
+  name="discount"
+  value={discount}
+  onChange={(e) => handleDiscountChange(Number(e.target.value))}
                   className="border p-2 rounded-2xl border-[#E2E8F0] bg-[#F8FAFC] outline-none focus:ring ring-defined-red"
                 />
               </div>
@@ -374,10 +400,11 @@ export default function CourseForm({
                   Offer Price (₹)
                 </label>
                 <input
-                  type="number"
-                  name="offerPrice"
-                  value={(offerPrice < 0 ? "0" : offerPrice.toFixed(0)) || ""}
-                  readOnly
+                  type="text"
+  onKeyDown={allowOnlyNumbers}
+  name="offerPrice"
+  value={offerPrice}
+  onChange={(e) => handleOfferPriceChange(Number(e.target.value))}
                   className="border p-2 rounded-2xl bg-green-50 border-green-200 outline-none"
                 />
               </div>

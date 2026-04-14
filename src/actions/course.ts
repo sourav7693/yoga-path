@@ -424,13 +424,37 @@ if (!auth) {
         updatedData.googleEventId = event.data.id;
       }
     } else if (startDateChanged || endDateChanged || meetingDurationChanged) {
-      await calendar.events.patch({
+  try {
+    await calendar.events.patch({
+      calendarId: "primary",
+      eventId: course.googleEventId,
+      auth,
+      requestBody: {
+        summary: (updatedData.courseName as string) || course.courseName,
+        description:
+          (updatedData.description as string) || course.description,
+        start: {
+          dateTime: (
+            combinedNewStartDate || new Date(course.startDate)
+          ).toISOString(),
+          timeZone: "Asia/Kolkata",
+        },
+        end: {
+          dateTime: new Date(
+            newEndDate || course.endDate || new Date()
+          ).toISOString(),
+          timeZone: "Asia/Kolkata",
+        },
+      },
+    });
+  } catch (error: any) {
+    if (error?.code === 404 || error?.status === 404) {
+      const event = await calendar.events.insert({
         calendarId: "primary",
-        eventId: course.googleEventId,
-        auth: auth,
+        conferenceDataVersion: 1,
+        auth,
         requestBody: {
-          summary:
-            (updatedData.courseName as string) || course.courseName,
+          summary: (updatedData.courseName as string) || course.courseName,
           description:
             (updatedData.description as string) || course.description,
           start: {
@@ -445,9 +469,22 @@ if (!auth) {
             ).toISOString(),
             timeZone: "Asia/Kolkata",
           },
+          conferenceData: {
+            createRequest: {
+              requestId: `${Date.now()}-${Math.random()}`,
+              conferenceSolutionKey: { type: "hangoutsMeet" },
+            },
+          },
         },
       });
+
+      updatedData.googleEventId = event.data.id;
+      updatedData.meetLink = event.data.hangoutLink;
+    } else {
+      throw error;
     }
+  }
+}
 
 
     const newThumbnail = formData.get("thumbnail") as File | null;
