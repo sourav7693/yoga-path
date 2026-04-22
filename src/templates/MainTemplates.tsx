@@ -4,6 +4,7 @@ import Footer from "@/components/global/Footer";
 import Header from "@/components/global/Header";
 import FixFooter from "@/components/global/FixFooter";
 import { getAllCourses } from "@/actions/course";
+import MobileFixfooter from "./MobileFixfooter";
 
 const MainTemplates = async ({ children } : {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ const MainTemplates = async ({ children } : {
       </div>
 
       <div className="lg:mt-[5rem] md:mt-[5rem] mt-[2rem]">{children}</div>
+      <MobileFixfooter/>
       <Footer />
       <FixFooter courses = {courses}/>
     </div>
