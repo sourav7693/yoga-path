@@ -399,7 +399,7 @@ export default function FormModal({
         </p>
 
         <h4 className="text-[14px] font-semibold text-white/80 text-left mb-4">
-          Fill out the form below to get started!
+         Next Batch Starts from 1st May 2026 – Limited Seats Available!
         </h4>
 
         {step === 1 && (
